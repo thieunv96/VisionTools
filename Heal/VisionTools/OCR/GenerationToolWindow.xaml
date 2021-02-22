@@ -1,0 +1,112 @@
+﻿<Window x:Class="Heal.VisionTools.OCR.GenerationToolWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Heal.VisionTools.OCR"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Background="#FEFEFE"
+        Title="Generation Tool Window" 
+        Height="600" Width="900"
+        MinHeight="500" MinWidth="700">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu Margin="5" Background="Transparent">
+                <MenuItem Header="_Menu"></MenuItem>
+                <MenuItem Header="_View"></MenuItem>
+                <MenuItem Header="_Help"></MenuItem>
+            </Menu>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="350"/>
+                </Grid.ColumnDefinitions>
+                <Grid  Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="403*"/>
+                        <RowDefinition Height="35"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <GroupBox Header="Configuration">
+                            <ScrollViewer Margin="5"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <Expander Margin="5, 15, 5,5" Header="  Font"
+                                              HorizontalContentAlignment="Left">
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="85"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                                >
+                                            <Label Content="Select Font folder:" Canvas.Left="9" Canvas.Top="1"/>
+                                            <TextBox Width="230" FontSize="16" IsReadOnly="True" Canvas.Left="15" Canvas.Top="28" ></TextBox>
+                                            <Button Width="25" Height="25" Content="..." Canvas.Left="255" Canvas.Top="27"></Button>
+                                            <Label Content="Font Size:" Canvas.Left="10" Canvas.Top="58"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="12.5" Canvas.Left="77" Canvas.Top="61"></TextBox>
+                                            <Label Content="~" Canvas.Left="147" Canvas.Top="54"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="20" Canvas.Left="166" Canvas.Top="61"/>
+
+                                        </Canvas>
+                                    </Expander>
+                                    <Expander Margin="5" Header="  Image" HorizontalContentAlignment="Left">
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="240"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                                >
+                                            <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="76" Canvas.Top="9"></TextBox>
+                                            <Label Content="x" Canvas.Left="148" Canvas.Top="4"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="165" Canvas.Top="9"/>
+                                            <Label Content="Background:" Canvas.Left="9" Canvas.Top="36"/>
+                                            <RadioButton Content="From folder image" Canvas.Left="21" Canvas.Top="67"></RadioButton>
+                                            <TextBox Width="230" FontSize="16" IsReadOnly="True" Canvas.Left="13" Canvas.Top="87" ></TextBox>
+                                            <Button Width="25" Height="25" Content="..." Canvas.Left="253" Canvas.Top="86"></Button>
+                                            <RadioButton Content="From Color" Canvas.Left="21" Canvas.Top="118"/>
+                                        </Canvas>
+                                    </Expander>
+                                    <Expander Margin="5" Header="  Text" HorizontalContentAlignment="Left">
+                                        <Grid Width="280" Background="#EEEEEE" Height="100">
+
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Margin="5" Header="  Effect" HorizontalContentAlignment="Left">
+                                        <Grid Width="280" Background="#EEEEEE" Height="100">
+
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Margin="5" Header="  Extensions" HorizontalContentAlignment="Left">
+                                        <Grid Width="280" Background="#EEEEEE" Height="100">
+
+                                        </Grid>
+                                    </Expander>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Button Margin="3" Background="#EEEEEE"
+                                Content="Try to preview the process"></Button>
+                    </Grid>
+                </Grid>
+
+                <GroupBox Grid.Column="0" Header="Preview">
+                    <Border ClipToBounds="True" Background="#EEEEEE">
+                        <Image></Image>
+                    </Border>
+                </GroupBox>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+
+        </Grid>
+    </Grid>
+</Window>
