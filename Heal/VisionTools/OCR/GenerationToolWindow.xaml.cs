@@ -23,5 +23,26 @@ namespace Heal.VisionTools.OCR
         {
             InitializeComponent();
         }
+
+        private void txtLetterSpaceing_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int val = Convert.ToInt32((sender as TextBox).Text);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                (sender as TextBox).Foreground = Brushes.Red;
+            }
+        }
+
+        private void txtLetterSpaceing_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                txtLetterSpaceing_LostFocus(sender, null);
+            }
+        }
     }
 }

@@ -8,14 +8,13 @@
         WindowStartupLocation="CenterScreen"
         Background="#FEFEFE"
         Title="Generation Tool Window" 
-        Height="600" Width="900"
+        Height="700" Width="1000"
         MinHeight="500" MinWidth="700">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Margin="5" Background="Transparent">
@@ -43,7 +42,7 @@
                                 <StackPanel>
                                     <Expander Margin="5, 15, 5,5" Header="  Font"
                                               HorizontalContentAlignment="Left">
-                                        <Canvas Width="290" Margin="3,10,3,3" Height="85"
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="210"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
@@ -51,42 +50,106 @@
                                             <TextBox Width="230" FontSize="16" IsReadOnly="True" Canvas.Left="15" Canvas.Top="28" ></TextBox>
                                             <Button Width="25" Height="25" Content="..." Canvas.Left="255" Canvas.Top="27"></Button>
                                             <Label Content="Font Size:" Canvas.Left="10" Canvas.Top="58"/>
-                                            <TextBox Width="70" TextAlignment="Center" Text="12.5" Canvas.Left="77" Canvas.Top="61"></TextBox>
-                                            <Label Content="~" Canvas.Left="147" Canvas.Top="54"/>
-                                            <TextBox Width="70" TextAlignment="Center" Text="20" Canvas.Left="166" Canvas.Top="61"/>
-
+                                            <TextBox Width="70" TextAlignment="Center" Text="12.5" Canvas.Left="99" Canvas.Top="61"></TextBox>
+                                            <Label Content="~" Canvas.Left="169" Canvas.Top="54"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="20" Canvas.Left="188" Canvas.Top="61"/>
+                                            <Label Content="Letter spacing:" Canvas.Left="9" Canvas.Top="85"/>
+                                            <TextBox x:Name="txtLetterSpaceing" PreviewKeyDown="txtLetterSpaceing_PreviewKeyDown" LostFocus="txtLetterSpaceing_LostFocus" Width="70" TextAlignment="Center" Text="0" Canvas.Left="98" Canvas.Top="88"></TextBox>
+                                            <Label Content="Line spaceing:" Canvas.Left="9" Canvas.Top="112"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="0" Canvas.Left="98" Canvas.Top="115"></TextBox>
+                                            <StackPanel Orientation="Horizontal"  Canvas.Left="13" Canvas.Top="159" >
+                                                <Label Content="B:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox  Text="100" Width="40" Height="20" Margin="5"/>
+                                                <Label Content="G:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox Text="100" Width="40"  Height="20" Margin="5"/>
+                                                <Label Content="R:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox Text="100" Width="40" Height="20" Margin="5"/>
+                                                <Button Width="25" Height="25" Margin="15,5,5,5"></Button>
+                                            </StackPanel>
+                                            <Label Content="Text color:" Canvas.Left="9" Canvas.Top="139"/>
                                         </Canvas>
                                     </Expander>
                                     <Expander Margin="5" Header="  Image" HorizontalContentAlignment="Left">
-                                        <Canvas Width="290" Margin="3,10,3,3" Height="240"
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="230"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
                                             <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
-                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="76" Canvas.Top="9"></TextBox>
-                                            <Label Content="x" Canvas.Left="148" Canvas.Top="4"/>
-                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="165" Canvas.Top="9"/>
-                                            <Label Content="Background:" Canvas.Left="9" Canvas.Top="36"/>
-                                            <RadioButton Content="From folder image" Canvas.Left="21" Canvas.Top="67"></RadioButton>
-                                            <TextBox Width="230" FontSize="16" IsReadOnly="True" Canvas.Left="13" Canvas.Top="87" ></TextBox>
-                                            <Button Width="25" Height="25" Content="..." Canvas.Left="253" Canvas.Top="86"></Button>
-                                            <RadioButton Content="From Color" Canvas.Left="21" Canvas.Top="118"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                            <Label Content="x" Canvas.Left="171" Canvas.Top="5"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="1000" Canvas.Left="188" Canvas.Top="10"/>
+                                            <Label Content="Background:" Canvas.Left="6" Canvas.Top="70"/>
+                                            <RadioButton x:Name="rbBGFromImage" Content="From folder image" Canvas.Left="18" Canvas.Top="101"></RadioButton>
+
+                                            <RadioButton  x:Name="rbBGFromColor" Content="From Color" IsChecked="True" Canvas.Left="19" Canvas.Top="162"/>
+                                            <StackPanel IsEnabled="{Binding ElementName=rbBGFromImage, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="121" >
+                                                <TextBox Width="230" FontSize="16" Margin="5" IsReadOnly="True"></TextBox>
+                                                <Button Width="25" Height="25" Content="..." Margin="5"></Button>
+                                            </StackPanel>
+                                            <StackPanel  IsEnabled="{Binding ElementName=rbBGFromColor, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="184" >
+                                                <Label Content="B:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox  Text="100" Width="40" Height="20" Margin="5"/>
+                                                <Label Content="G:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox Text="100" Width="40"  Height="20" Margin="5"/>
+                                                <Label Content="R:" VerticalContentAlignment="Center"></Label>
+                                                <TextBox Text="100" Width="40" Height="20" Margin="5"/>
+                                                <Button Width="25" Height="25" Margin="15,5,5,5"></Button>
+                                            </StackPanel>
+                                            <Label Content="Generate:" Canvas.Left="10" Canvas.Top="40"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="10" Canvas.Left="99" Canvas.Top="44"/>
+                                            <Label Content="image..." Canvas.Left="173" Canvas.Top="41"/>
                                         </Canvas>
                                     </Expander>
                                     <Expander Margin="5" Header="  Text" HorizontalContentAlignment="Left">
-                                        <Grid Width="280" Background="#EEEEEE" Height="100">
-
-                                        </Grid>
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="300"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                                >
+                                            <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="0.7" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                            <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
+                                            <TextBox Width="70" TextAlignment="Center" Text="1.0" Canvas.Left="188" Canvas.Top="10"/>
+                                            <RadioButton x:Name="rbRandomText" IsChecked="True" Content="Random text" Canvas.Left="14" Canvas.Top="42"></RadioButton>
+                                            <StackPanel Canvas.Left="19" Canvas.Top="61" IsEnabled="{Binding ElementName=rbRandomText, Path=IsChecked}">
+                                                <StackPanel  Orientation="Horizontal" >
+                                                    <Label Content="Lenght Char:" Canvas.Left="10" Canvas.Top="6"/>
+                                                    <TextBox Width="70" TextAlignment="Center" Text="6" Margin="30,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                    <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
+                                                    <TextBox Width="70" TextAlignment="Center" Text="8" Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                </StackPanel>
+                                                <StackPanel Canvas.Left="15" Canvas.Top="93">
+                                                    <Label Content="Select character:"></Label>
+                                                    <CheckBox Content="Number 0~9" Margin="5" IsChecked="True"></CheckBox>
+                                                    <CheckBox Content="Upper character A~Z" Margin="5" IsChecked="True"></CheckBox>
+                                                    <CheckBox Content="Lower character a~z" Margin="5" IsChecked="True"></CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cOtherChar" Content="Other character:" Margin="5" IsChecked="True"></CheckBox>
+                                                        <TextBox Margin="10,0,0,0" Width="130" IsEnabled="{Binding ElementName=cOtherChar, Path=IsChecked}"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <RadioButton x:Name="rbImportText" Content="Import text" Canvas.Left="14" Canvas.Top="221"></RadioButton>
+                                            <StackPanel Canvas.Left="23" Canvas.Top="243" IsEnabled="{Binding ElementName=rbImportText, Path=IsChecked}">
+                                                <TextBox Width="256" Height="50"/>
+                                            </StackPanel>
+                                        </Canvas>
                                     </Expander>
                                     <Expander Margin="5" Header="  Effect" HorizontalContentAlignment="Left">
-                                        <Grid Width="280" Background="#EEEEEE" Height="100">
-
-                                        </Grid>
-                                    </Expander>
-                                    <Expander Margin="5" Header="  Extensions" HorizontalContentAlignment="Left">
-                                        <Grid Width="280" Background="#EEEEEE" Height="100">
-
-                                        </Grid>
+                                        <Canvas Width="290" Margin="3,10,3,3" Height="150"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                                >
+                                            <StackPanel Canvas.Left="19" Canvas.Top="5" IsEnabled="{Binding ElementName=rbRandomText, Path=IsChecked}">
+                                                <StackPanel>
+                                                    <Label Content="Add effect / defect:"/>
+                                                    <CheckBox Content="Add blur" Margin="5" IsChecked="True"/>
+                                                    <CheckBox Content="Add median blur" Margin="5" IsChecked="True"/>
+                                                    <CheckBox Content="Add gaussian blur" Margin="5" IsChecked="True"/>
+                                                    <CheckBox Content="Add pepper noise" Margin="5" IsChecked="True"/>
+                                                    <CheckBox Content="Add gaussian noise" Margin="5" IsChecked="True"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Canvas>
                                     </Expander>
                                 </StackPanel>
                             </ScrollViewer>
@@ -105,8 +168,33 @@
                 </GroupBox>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1">
-
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="500"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <GroupBox Header="Log" Margin="0">
+                    <TextBox Margin="3"></TextBox>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Column="1">
+                <GroupBox Header="Run" Margin="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Label Content="Save folder:"></Label>
+                            <TextBox Width="225" Height="20" Margin="23,0,0,0"></TextBox>
+                            <Button Width="20" Content="..." Height="20" Margin="15,0,0,0"></Button>
+                            <CheckBox Content="Save Config" VerticalContentAlignment="Center" Margin="25,0,0,0"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5,10,5,5" HorizontalAlignment="Right">
+                            <Button Height="27" Width="150" Content="Generate Each Character" Margin="15,0,15,0"></Button>
+                            <Button Height="27" Width="80" Content="Generate" Margin="15,0,15,0"></Button>
+                            <Button Height="27" Width="80" Content="Cancel" Margin="15,0,15,0"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
