@@ -11,19 +11,32 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Heal.VisionTools.OCR
 {
     /// <summary>
     /// Interaction logic for GenerationToolWindow.xaml
     /// </summary>
-    public partial class GenerationToolWindow : Window
+    public partial class GenerationToolWindow : Window, INotifyPropertyChanged
     {
+        public Struct.GenConfig mConfiguration = new Struct.GenConfig();
+        public string   test = "test";
         public GenerationToolWindow()
         {
             InitializeComponent();
+            
         }
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private void InitBinding()
+        {
+            this.DataContext = this;
+        }
         private void txtLetterSpaceing_LostFocus(object sender, RoutedEventArgs e)
         {
             try
