@@ -11,21 +11,39 @@ namespace Heal.VisionTools.OCR.Utils
 {
     class DrawCharacter
     {
-        public DrawResult DrawText(string Content, Font TextFont,Color Backgound, Color Foreground)
+        private Object ObjLock = new Object();
+        public Bitmap DrawText(string Content, Font TextFont,Color Backgound, Color Foreground)
+        {
+            Bitmap outImg = null;
+            lock (ObjLock)
+            {
+                SizeF textSize = new SizeF(1, 1);
+                using (Image img = new Bitmap(1, 1))
+                using (Graphics temp = Graphics.FromImage(img))
+                {
+                    textSize = temp.MeasureString(Content, TextFont);
+                }
+                outImg = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                using (Graphics drawing = Graphics.FromImage(outImg))
+                {
+                    drawing.Clear(Backgound);
+                    Brush textBrush = new SolidBrush(Foreground);
+                    drawing.DrawString(Content, TextFont, textBrush, 0, 0);
+
+                }
+            }
+            return outImg;
+        }
+        public DrawResult DrawText(string Content, Font TextFont,  Color TextColor)
         {
             DrawResult result = new DrawResult();
-            SizeF textSize = new SizeF(1, 1);
-            using (Image img = new Bitmap(1, 1))
-            using (Graphics temp = Graphics.FromImage(img))
+            Bitmap bmMask = DrawText(Content, TextFont, Color.White, Color.Black);
             {
-                textSize = temp.MeasureString(Content, TextFont);
+                result.Mask = new Image<Bgr, byte>(bmMask);
             }
-            Bitmap outImg = new Bitmap((int)textSize.Width, (int)textSize.Height);
-            using (Graphics drawing = Graphics.FromImage(outImg))
+            Bitmap image = DrawText(Content, TextFont, Color.Black, TextColor);
             {
-                drawing.Clear(Backgound);
-                Brush textBrush = new SolidBrush(Foreground);
-                drawing.DrawString(Content, TextFont, textBrush, 0, 0);
+                result.Image = new Image<Bgr, byte>(image);
             }
             return result;
         }
@@ -34,5 +52,18 @@ namespace Heal.VisionTools.OCR.Utils
     {
         public Image<Bgr, byte> Image { get; set; }
         public  Image<Bgr, byte> Mask { get; set; }
+        public void Dispose()
+        {
+            if(this.Image != null)
+            {
+                this.Image.Dispose();
+                this.Image = null;
+            }
+            if (this.Mask != null)
+            {
+                this.Mask.Dispose();
+                this.Mask = null;
+            }
+        }
     }
 }

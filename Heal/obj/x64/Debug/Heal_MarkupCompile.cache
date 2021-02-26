@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\___\Duong\VisionTools\Heal\obj\x64\Debug\
+D:\Projects\MrDuong\VisionTools\Heal\obj\x64\Debug\
 Heal
 none
 false
 DEBUG;TRACE
-D:\___\Duong\VisionTools\Heal\App.xaml
+D:\Projects\MrDuong\VisionTools\Heal\App.xaml
 2-1823396015
 1-2138471434
-11-2112465974
-131-1275621426
+122085602825
+133-729547283
 MainWindow.xaml;VisionTools\OCR\GenerationToolWindow.xaml;
 
-True
+False
 

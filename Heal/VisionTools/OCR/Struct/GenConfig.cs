@@ -26,8 +26,8 @@ namespace Heal.VisionTools.OCR.Struct
         public string FontPath { get; set; }
         public double MinFontSize { get; set; }
         public double MaxFontSize { get; set; }
-        public int LetterSpacing { get; set; }
-        public int LineSpacing { get; set; }
+        public uint LetterSpacing { get; set; }
+        public uint LineSpacing { get; set; }
         public Color TextColor { get; set; }
         public FontSt()
         {
@@ -35,23 +35,27 @@ namespace Heal.VisionTools.OCR.Struct
             this.MinFontSize = 12.5;
             this.MaxFontSize = 20;
             this.TextColor = Color.Black;
+            this.FontPath = @"D:\Projects\MrDuong\VisionTools\test\font";
         }
     }
     public class ImageSt
     {
         public string ImageBGPath { get; set; }
-        public Size ImageSize { get; set; }
-        public int ImageNum { get; set; }
+        public uint ImageWidth { get; set; }
+        public uint ImageHeight { get; set; }
+        public uint ImageNum { get; set; }
         public bool UseBGFromImage { get; set; }
         public bool UseBGFromColor { get; set; }
         public Color BGColor { get; set; }
         public ImageSt()
         {
-            this.ImageSize = new Size(1000, 1000);
+            this.ImageWidth = 500;
+            this.ImageHeight = 500;
             this.ImageNum = 10;
             this.UseBGFromColor = true;
             this.UseBGFromImage = false;
             this.BGColor = Color.White;
+            this.ImageBGPath = @"D:\Projects\MrDuong\VisionTools\test\background";
         }
     }
     public class TextSt
@@ -60,8 +64,8 @@ namespace Heal.VisionTools.OCR.Struct
         public double MaxOpacity { get; set; }
         public bool UseRandomText { get; set; }
         public bool UseImportText { get; set; }
-        public int MinLengthChar { get; set; }
-        public int MaxLengthChar { get; set; }
+        public uint MinLengthChar { get; set; }
+        public uint MaxLengthChar { get; set; }
         public bool UseNumber { get; set; }
         public bool UseUpperChar { get; set; }
         public bool UseLowerChar { get; set; }
@@ -74,8 +78,8 @@ namespace Heal.VisionTools.OCR.Struct
             this.MaxOpacity = 1.0;
             this.MinLengthChar = 6;
             this.MaxLengthChar = 8;
-            this.UseRandomText = false;
-            this.UseImportText = true;
+            this.UseRandomText = true;
+            this.UseImportText = false;
             this.UseNumber = true;
             this.UseUpperChar = false;
             this.UseLowerChar = false;

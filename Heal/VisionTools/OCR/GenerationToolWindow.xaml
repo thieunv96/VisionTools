@@ -106,12 +106,12 @@
                                                 >
                                             <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
                                             <TextBox x:Name="txtWImageSize"  Width="70" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.ImageSetting.ImageSize.Width}"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageWidth}"
                                                      Canvas.Left="99" Canvas.Top="10"
                                                      ></TextBox>
                                             <Label Content="x" Canvas.Left="171" Canvas.Top="5"/>
                                             <TextBox x:Name="txtHImageSize" Width="70" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.ImageSetting.ImageSize.Height}"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageHeight}"
                                                      Canvas.Left="188" Canvas.Top="10"/>
                                             <Label Content="Background:" Canvas.Left="6" Canvas.Top="70"/>
                                             <RadioButton x:Name="rbBGFromImage"
@@ -255,7 +255,9 @@
 
                 <GroupBox Grid.Column="0" Header="Preview">
                     <Border ClipToBounds="True" Background="#EEEEEE">
-                        <Image></Image>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <Image x:Name="imbPreview" Stretch="None"></Image>
+                        </ScrollViewer>
                     </Border>
                 </GroupBox>
             </Grid>
@@ -283,8 +285,10 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <Label Content="Save folder:"></Label>
-                            <TextBox x:Name="txtSaveFolder" Width="225" Height="20" Margin="23,0,0,0"></TextBox>
-                            <Button x:Name="txtBrowserSaveFolder" Width="20" Content="..." Height="20" Margin="15,0,0,0"></Button>
+                            <TextBox x:Name="txtSaveFolder" 
+                                     Text="{Binding mSavePath}"
+                                     Width="225" Height="20" Margin="23,0,0,0"></TextBox>
+                            <Button x:Name="txtBrowserSaveFolder" Width="20" Content="..." Height="20" Margin="15,0,0,0" Click="txtBrowserSaveFolder_Click"></Button>
                             <CheckBox x:Name="cSaveConfig" Content="Save Config" IsChecked="True" VerticalContentAlignment="Center" Margin="25,0,0,0"></CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5,10,5,5" HorizontalAlignment="Right">

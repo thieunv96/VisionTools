@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.IO;
 using System.Diagnostics;
+using Emgu.CV.Structure;
+using Emgu.CV;
 
 namespace Heal.VisionTools.OCR
 {
@@ -23,6 +25,7 @@ namespace Heal.VisionTools.OCR
     public partial class GenerationToolWindow : Window, INotifyPropertyChanged
     {
         public Struct.GenConfig mGenConfig = new Struct.GenConfig();
+        public string mSavePath { get; set; }
         public bool mInSetColor = false;
         public Struct.GenConfig mConfiguration
         {
@@ -35,7 +38,7 @@ namespace Heal.VisionTools.OCR
         }
         public GenerationToolWindow()
         {
-            mConfiguration = new Struct.GenConfig();
+            mSavePath = "C:\\";
             InitializeComponent();
             this.DataContext = this;
         }
@@ -49,7 +52,23 @@ namespace Heal.VisionTools.OCR
 
         private void btTryPreview_Click(object sender, RoutedEventArgs e)
         {
-            mConfiguration.FontSetting.LetterSpacing = 50;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            Utils.PageGeneration genPage = new Utils.PageGeneration();
+            var imagePage = genPage.GetPageImage(mConfiguration);
+            if(imagePage != null)
+            {
+                txtLog.Text += "Try to preview the process successfully!\n";
+                var bms = Struct.Convertor.Bitmap2BitmapSource(imagePage.Bitmap);
+                imbPreview.Source = bms;
+                imagePage.Dispose();
+                imagePage = null;
+            }
+            else
+            {
+                txtLog.Text += "Try to preview the process failed!\n";
+            }
+            Console.WriteLine($"{imbPreview.ActualWidth} x { imbPreview.ActualHeight}");
         }
 
         private void btSelectTextColor_Click(object sender, RoutedEventArgs e)
@@ -140,12 +159,31 @@ namespace Heal.VisionTools.OCR
                 }
             }
         }
+        private void txtBrowserSaveFolder_Click(object sender, RoutedEventArgs e)
+        {
+            using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                string path = mSavePath;
+                if (Directory.Exists(path))
+                {
+                    fbd.SelectedPath = path;
+                }
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    mSavePath = fbd.SelectedPath;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
 
         private void btGenerate_Click(object sender, RoutedEventArgs e)
         {
+
             
         }
+
+        
     }
 }
