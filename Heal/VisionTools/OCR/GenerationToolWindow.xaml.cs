@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using System.IO;
 
 namespace Heal.VisionTools.OCR
 {
@@ -20,41 +21,128 @@ namespace Heal.VisionTools.OCR
     /// </summary>
     public partial class GenerationToolWindow : Window, INotifyPropertyChanged
     {
-        public Struct.GenConfig mConfiguration = new Struct.GenConfig();
-        public string   test = "test";
+        public Struct.GenConfig mGenConfig = new Struct.GenConfig();
+        public bool mInSetColor = false;
+        public Struct.GenConfig mConfiguration
+        {
+            get { return mGenConfig; }
+            set
+            {
+                mGenConfig = value; 
+                OnPropertyChanged();
+            }
+        }
         public GenerationToolWindow()
         {
+            mConfiguration = new Struct.GenConfig();
             InitializeComponent();
-            
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        private void InitBinding()
-        {
             this.DataContext = this;
         }
-        private void txtLetterSpaceing_LostFocus(object sender, RoutedEventArgs e)
+        #region Binding to view
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged()
         {
-            try
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(null));
+        }
+
+
+        #endregion
+
+        private void btTryPreview_Click(object sender, RoutedEventArgs e)
+        {
+            mConfiguration.FontSetting.LetterSpacing = 50;
+        }
+
+        private void btSelectTextColor_Click(object sender, RoutedEventArgs e)
+        {
+            mInSetColor = true;
+            using (System.Windows.Forms.ColorDialog colorDlg = new System.Windows.Forms.ColorDialog())
             {
-                int val = Convert.ToInt32((sender as TextBox).Text);
+                if (colorDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    mConfiguration.FontSetting.TextColor = colorDlg.Color;
+                    OnPropertyChanged();
+                }
             }
-            catch(Exception ex)
+            mInSetColor = false;
+        }
+
+
+        private void btSelectBGColor_Click(object sender, RoutedEventArgs e)
+        {
+            mInSetColor = true;
+            using (System.Windows.Forms.ColorDialog colorDlg = new System.Windows.Forms.ColorDialog())
             {
-                MessageBox.Show(ex.Message);
-                (sender as TextBox).Foreground = Brushes.Red;
+                if (colorDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    mConfiguration.ImageSetting.BGColor = colorDlg.Color;
+                    OnPropertyChanged();
+                }
+            }
+            mInSetColor = false;
+        }
+        private void btGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(mConfiguration.ImageSetting.UseBGFromColor);
+        }
+
+        private void txtTextColor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(!mInSetColor)
+            {
+                var color = Struct.Action.SetColor(txtBTextColor, txtGTextColor, txtRTextColor);
+                if (color != null)
+                {
+                    mConfiguration.FontSetting.TextColor = (System.Drawing.Color)color;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private void txtBGColor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!mInSetColor)
+            {
+                var color = Struct.Action.SetColor(txtBImageColor, txtGImageColor, txtRImageColor);
+                if (color != null)
+                {
+                    mConfiguration.ImageSetting.BGColor = (System.Drawing.Color)color;
+                    OnPropertyChanged();
+                }
             }
         }
 
-        private void txtLetterSpaceing_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void btBrowerFontFolder_Click(object sender, RoutedEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            using (System.Windows.Forms.FolderBrowserDialog fbd =  new System.Windows.Forms.FolderBrowserDialog())
             {
-                txtLetterSpaceing_LostFocus(sender, null);
+                string path = mConfiguration.FontSetting.FontPath;
+                if(Directory.Exists(path))
+                {
+                    fbd.SelectedPath = path;
+                }
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    mConfiguration.FontSetting.FontPath = fbd.SelectedPath;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private void btSelectFolderBGImage_Click(object sender, RoutedEventArgs e)
+        {
+            using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                string path = mConfiguration.FontSetting.FontPath;
+                if (Directory.Exists(path))
+                {
+                    fbd.SelectedPath = path;
+                }
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    mConfiguration.ImageSetting.ImageBGPath = fbd.SelectedPath;
+                    OnPropertyChanged();
+                }
             }
         }
     }

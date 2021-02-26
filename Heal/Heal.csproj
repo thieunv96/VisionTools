@@ -114,6 +114,8 @@
     <Compile Include="VisionTools\OCR\GenerationToolWindow.xaml.cs">
       <DependentUpon>GenerationToolWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisionTools\OCR\Struct\Action.cs" />
+    <Compile Include="VisionTools\OCR\Struct\Convertor.cs" />
     <Compile Include="VisionTools\OCR\Struct\Enum.cs" />
     <Compile Include="VisionTools\OCR\Struct\GenConfig.cs" />
     <Page Include="MainWindow.xaml">

@@ -4,13 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Heal.VisionTools.OCR"
+        xmlns:cvt="clr-namespace:Heal.VisionTools.OCR.Struct"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Background="#FEFEFE"
         Title="Generation Tool Window" 
         Height="700" Width="1000"
         MinHeight="500" MinWidth="700"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <cvt:BrushColorCvt x:Key="BrushColor"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -48,27 +54,47 @@
                                               VerticalAlignment="Top"
                                                 >
                                             <Label Content="Select Font folder:" Canvas.Left="9" Canvas.Top="1"/>
-                                            <TextBox  x:Name="txtFontFolder" Width="230" FontSize="16" IsReadOnly="True" Canvas.Left="15" Canvas.Top="28" ></TextBox>
-                                            <Button x:Name="btBrowerFontFolder" Width="25" Height="25" Content="..." Canvas.Left="255" Canvas.Top="27"></Button>
+                                            <TextBox  x:Name="txtFontFolder" Width="230" FontSize="16"
+                                                      Text="{Binding mConfiguration.FontSetting.FontPath}"
+                                                      IsReadOnly="True" Canvas.Left="15" Canvas.Top="28" ></TextBox>
+                                            <Button x:Name="btBrowerFontFolder" Width="25" Height="25" Content="..." Canvas.Left="255" Canvas.Top="27" Click="btBrowerFontFolder_Click"></Button>
                                             <Label Content="Font Size:" Canvas.Left="10" Canvas.Top="58"/>
-                                            <TextBox x:Name="txtMinFontSize" Width="70" TextAlignment="Center" Text="12.5" Canvas.Left="99" Canvas.Top="61"></TextBox>
+                                            <TextBox x:Name="txtMinFontSize" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.FontSetting.MinFontSize}"
+                                                     Canvas.Left="99" Canvas.Top="61"></TextBox>
                                             <Label Content="~" Canvas.Left="169" Canvas.Top="54"/>
-                                            <TextBox x:Name="txtMaxFontSize" Width="70" TextAlignment="Center" Text="20" Canvas.Left="188" Canvas.Top="61"/>
+                                            <TextBox x:Name="txtMaxFontSize" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.FontSetting.MaxFontSize}"
+                                                     Canvas.Left="188" Canvas.Top="61"/>
                                             <Label Content="Letter spacing:" Canvas.Left="9" Canvas.Top="85"/>
-                                            <TextBox x:Name="txtLetterSpacing" PreviewKeyDown="txtLetterSpaceing_PreviewKeyDown"
-                                                     LostFocus="txtLetterSpaceing_LostFocus" Width="70" TextAlignment="Center"
+                                            <TextBox x:Name="txtLetterSpacing" 
+                                                     Text="{Binding mConfiguration.FontSetting.LetterSpacing}"
+                                                     Width="70" TextAlignment="Center"
                                                      Canvas.Left="98" Canvas.Top="88"
                                                      ></TextBox>
                                             <Label Content="Line spaceing:" Canvas.Left="9" Canvas.Top="112"/>
-                                            <TextBox x:Name="txtLineSpacing" Width="70" TextAlignment="Center" Text="0" Canvas.Left="98" Canvas.Top="115"></TextBox>
+                                            <TextBox x:Name="txtLineSpacing" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.FontSetting.LineSpacing}"
+                                                     Canvas.Left="98" Canvas.Top="115"></TextBox>
                                             <StackPanel Orientation="Horizontal"  Canvas.Left="13" Canvas.Top="159" >
                                                 <Label Content="B:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtBTextColor" Text="100" Width="40" Height="20" Margin="5"/>
+                                                <TextBox x:Name="txtBTextColor"
+                                                         Text="{Binding mConfiguration.FontSetting.TextColor.B, Mode=OneWay}"
+                                                         Width="40" Height="20" Margin="5" 
+                                                         TextChanged="txtTextColor_TextChanged"/>
                                                 <Label Content="G:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtGTextColor"  Text="100" Width="40"  Height="20" Margin="5"/>
+                                                <TextBox x:Name="txtGTextColor"  
+                                                         Text="{Binding mConfiguration.FontSetting.TextColor.G, Mode=OneWay}"
+                                                         Width="40"  Height="20" Margin="5"
+                                                         TextChanged="txtTextColor_TextChanged"/>
                                                 <Label Content="R:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtRTextColor"  Text="100" Width="40" Height="20" Margin="5"/>
-                                                <Button x:Name="btSelectTextColor" Width="25" Height="25" Margin="15,5,5,5"></Button>
+                                                <TextBox x:Name="txtRTextColor" 
+                                                         Text="{Binding mConfiguration.FontSetting.TextColor.R, Mode=OneWay}"
+                                                         Width="40" Height="20" Margin="5"
+                                                         TextChanged="txtTextColor_TextChanged"/>
+                                                <Button x:Name="btSelectTextColor" Width="25"
+                                                        Background="{Binding mConfiguration.FontSetting.TextColor, Converter={StaticResource BrushColor}}"
+                                                        Height="25" Margin="15,5,5,5" Click="btSelectTextColor_Click"></Button>
                                             </StackPanel>
                                             <Label Content="Text color:" Canvas.Left="9" Canvas.Top="139"/>
                                         </Canvas>
@@ -79,28 +105,54 @@
                                               VerticalAlignment="Top"
                                                 >
                                             <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
-                                            <TextBox x:Name="txtWImageSize"  Width="70" TextAlignment="Center" Text="1000" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                            <TextBox x:Name="txtWImageSize"  Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageSize.Width}"
+                                                     Canvas.Left="99" Canvas.Top="10"
+                                                     ></TextBox>
                                             <Label Content="x" Canvas.Left="171" Canvas.Top="5"/>
-                                            <TextBox x:Name="txtHImageSize" Width="70" TextAlignment="Center" Text="1000" Canvas.Left="188" Canvas.Top="10"/>
+                                            <TextBox x:Name="txtHImageSize" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageSize.Height}"
+                                                     Canvas.Left="188" Canvas.Top="10"/>
                                             <Label Content="Background:" Canvas.Left="6" Canvas.Top="70"/>
-                                            <RadioButton x:Name="rbBGFromImage" Content="From folder image" Canvas.Left="18" Canvas.Top="101"></RadioButton>
+                                            <RadioButton x:Name="rbBGFromImage"
+                                                         IsChecked="{Binding mConfiguration.ImageSetting.UseBGFromImage, Mode=TwoWay}"
+                                                         Content="From folder image" Canvas.Left="18"
+                                                         Canvas.Top="101"></RadioButton>
 
-                                            <RadioButton  x:Name="rbBGFromColor" Content="From Color" IsChecked="True" Canvas.Left="19" Canvas.Top="162"/>
+                                            <RadioButton  x:Name="rbBGFromColor" Content="From Color" 
+                                                          IsChecked="{Binding mConfiguration.ImageSetting.UseBGFromColor, Mode=TwoWay}"
+                                                          Canvas.Left="19" Canvas.Top="162"/>
                                             <StackPanel IsEnabled="{Binding ElementName=rbBGFromImage, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="121" >
-                                                <TextBox x:Name="txtFolderBGImage" Width="230" FontSize="16" Margin="5" IsReadOnly="True"></TextBox>
-                                                <Button x:Name="btSelectFolderBGImage" Width="25" Height="25" Content="..." Margin="5"></Button>
+                                                <TextBox x:Name="txtFolderBGImage" Width="230"
+                                                         Text="{Binding mConfiguration.ImageSetting.ImageBGPath}"
+                                                         FontSize="16" Margin="5" IsReadOnly="True"></TextBox>
+                                                <Button x:Name="btSelectFolderBGImage" Width="25" Height="25" Content="..." Margin="5" Click="btSelectFolderBGImage_Click"></Button>
                                             </StackPanel>
                                             <StackPanel  IsEnabled="{Binding ElementName=rbBGFromColor, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="184" >
                                                 <Label Content="B:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox  x:Name="txtBImageColor" Text="100" Width="40" Height="20" Margin="5"/>
+                                                <TextBox  x:Name="txtBImageColor" 
+                                                          TextChanged="txtBGColor_TextChanged"
+                                                          Text="{Binding mConfiguration.ImageSetting.BGColor.B, Mode=OneWay}"
+                                                          Width="40" Height="20" Margin="5"/>
                                                 <Label Content="G:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtGImageColor"  Text="100" Width="40"  Height="20" Margin="5"/>
+                                                <TextBox x:Name="txtGImageColor"  
+                                                         TextChanged="txtBGColor_TextChanged"
+                                                         Text="{Binding mConfiguration.ImageSetting.BGColor.G, Mode=OneWay}"
+                                                         Width="40"  Height="20" Margin="5"/>
                                                 <Label Content="R:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox  x:Name="txtRImageColor" Text="100" Width="40" Height="20" Margin="5"/>
-                                                <Button  x:Name="btSelectBGColor" Width="25" Height="25" Margin="15,5,5,5"></Button>
+                                                <TextBox  x:Name="txtRImageColor" 
+                                                          TextChanged="txtBGColor_TextChanged"
+                                                          Text="{Binding mConfiguration.ImageSetting.BGColor.R, Mode=OneWay}"
+                                                          Width="40" Height="20" Margin="5"/>
+                                                <Button  x:Name="btSelectBGColor"
+                                                         Click="btSelectBGColor_Click"
+                                                         Background="{Binding mConfiguration.ImageSetting.BGColor, Converter={StaticResource BrushColor}}"
+                                                         Width="25" Height="25" Margin="15,5,5,5"></Button>
                                             </StackPanel>
                                             <Label Content="Generate:" Canvas.Left="10" Canvas.Top="40"/>
-                                            <TextBox x:Name="txtNumImageGenerate" Width="70" TextAlignment="Center" Text="10" Canvas.Left="99" Canvas.Top="44"/>
+                                            <TextBox x:Name="txtNumImageGenerate" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageNum}"
+                                                     Canvas.Left="99" Canvas.Top="44"/>
                                             <Label Content="image..." Canvas.Left="173" Canvas.Top="41"/>
                                         </Canvas>
                                     </Expander>
@@ -110,31 +162,57 @@
                                               VerticalAlignment="Top"
                                                 >
                                             <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
-                                            <TextBox x:Name="txtMinOpacity" Width="70" TextAlignment="Center" Text="0.7" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                            <TextBox x:Name="txtMinOpacity" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.TextSetting.MinOpacity}"
+                                                     Canvas.Left="99" Canvas.Top="10"></TextBox>
                                             <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
-                                            <TextBox x:Name="txtMaxOpacity" Width="70" TextAlignment="Center" Text="1.0" Canvas.Left="188" Canvas.Top="10"/>
-                                            <RadioButton x:Name="rbRandomText" IsChecked="True" Content="Random text" Canvas.Left="14" Canvas.Top="42"></RadioButton>
+                                            <TextBox x:Name="txtMaxOpacity" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.TextSetting.MaxOpacity}"
+                                                     Canvas.Left="188" Canvas.Top="10"/>
+                                            <RadioButton x:Name="rbRandomText" 
+                                                         IsChecked="{Binding mConfiguration.TextSetting.UseRandomText}"
+                                                         Content="Random text" Canvas.Left="14" Canvas.Top="42"></RadioButton>
                                             <StackPanel Canvas.Left="19" Canvas.Top="61" IsEnabled="{Binding ElementName=rbRandomText, Path=IsChecked}">
                                                 <StackPanel  Orientation="Horizontal" >
                                                     <Label Content="Lenght Char:" Canvas.Left="10" Canvas.Top="6"/>
-                                                    <TextBox x:Name="txtMinLenghtChr"  Width="70" TextAlignment="Center" Text="6" Margin="30,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                    <TextBox x:Name="txtMinLenghtChr"  Width="70" TextAlignment="Center"
+                                                             Text="{Binding mConfiguration.TextSetting.MinLengthChar}" 
+                                                             Margin="30,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
                                                     <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
-                                                    <TextBox x:Name="txtMaxLenghtChr"  Width="70" TextAlignment="Center" Text="8" Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                    <TextBox x:Name="txtMaxLenghtChr"  Width="70" TextAlignment="Center"
+                                                             Text="{Binding mConfiguration.TextSetting.MaxLengthChar}" 
+                                                             Height="20"  Canvas.Left="188" Canvas.Top="10"/>
                                                 </StackPanel>
                                                 <StackPanel Canvas.Left="15" Canvas.Top="93">
                                                     <Label Content="Select character:"></Label>
-                                                    <CheckBox x:Name="cNumber" Content="Number 0~9" Margin="5" IsChecked="True"></CheckBox>
-                                                    <CheckBox x:Name="cUpperChar"  Content="Upper character A~Z" Margin="5" IsChecked="True"></CheckBox>
-                                                    <CheckBox x:Name="cLowerChar"  Content="Lower character a~z" Margin="5" IsChecked="True"></CheckBox>
+                                                    <CheckBox x:Name="cNumber" Content="Number (0~9)" Margin="5"
+                                                              IsChecked="{Binding mConfiguration.TextSetting.UseNumber}"></CheckBox>
+                                                    <CheckBox x:Name="cUpperChar"  Content="Upper character (A~Z)" 
+                                                              Margin="5"
+                                                              IsChecked="{Binding mConfiguration.TextSetting.UseUpperChar}"></CheckBox>
+                                                    <CheckBox x:Name="cLowerChar"  Content="Lower character (a~z)"
+                                                              Margin="5"
+                                                              IsChecked="{Binding mConfiguration.TextSetting.UseLowerChar}"></CheckBox>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <CheckBox x:Name="cOtherChar" Content="Other character:" Margin="5" IsChecked="True"></CheckBox>
-                                                        <TextBox x:Name="txtOtherChar" Margin="10,0,0,0" Width="130" IsEnabled="{Binding ElementName=cOtherChar, Path=IsChecked}"></TextBox>
+                                                        <CheckBox x:Name="cOtherChar" Content="Other character:" 
+                                                                  Margin="5" 
+                                                                  IsChecked="{Binding mConfiguration.TextSetting.UseOtherChar}"></CheckBox>
+                                                        <TextBox x:Name="txtOtherChar" Margin="10,0,0,0"
+                                                                 Width="130" 
+                                                                 Text="{Binding mConfiguration.TextSetting.OtherChar}"
+                                                                 IsEnabled="{Binding ElementName=cOtherChar, Path=IsChecked}"></TextBox>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
-                                            <RadioButton x:Name="rbImportText" Content="Import text" Canvas.Left="14" Canvas.Top="221"></RadioButton>
+                                            <RadioButton x:Name="rbImportText" Content="Import text"
+                                                         IsChecked="{Binding mConfiguration.TextSetting.UseImportText}"
+                                                         Canvas.Left="14" Canvas.Top="221"></RadioButton>
                                             <StackPanel Canvas.Left="23" Canvas.Top="243" IsEnabled="{Binding ElementName=rbImportText, Path=IsChecked}">
-                                                <TextBox x:Name="txtTextImport" Width="256" Height="50"/>
+                                                <TextBox x:Name="txtTextImport" Width="256" Height="50"
+                                                        TextWrapping="Wrap"
+                                                        AcceptsReturn="True"
+                                                        VerticalScrollBarVisibility="Auto"
+                                                        Text="{Binding mConfiguration.TextSetting.ImportText}" />
                                             </StackPanel>
                                         </Canvas>
                                     </Expander>
@@ -143,14 +221,24 @@
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
-                                            <StackPanel Canvas.Left="19" Canvas.Top="5" IsEnabled="{Binding ElementName=rbRandomText, Path=IsChecked}">
+                                            <StackPanel Canvas.Left="19" Canvas.Top="5">
                                                 <StackPanel>
                                                     <Label Content="Add effect / defect:"/>
-                                                    <CheckBox x:Name="cAddBlur" Content="Add average blur" Margin="5" IsChecked="True"/>
-                                                    <CheckBox x:Name="cAddMedianBlur"  Content="Add median blur" Margin="5" IsChecked="True"/>
-                                                    <CheckBox x:Name="cAddGaussianBlur"  Content="Add gaussian blur" Margin="5" IsChecked="True"/>
-                                                    <CheckBox x:Name="cAddPepperNoise"  Content="Add pepper noise" Margin="5" IsChecked="True"/>
-                                                    <CheckBox x:Name="cAddGaussionNoise"  Content="Add gaussian noise" Margin="5" IsChecked="True"/>
+                                                    <CheckBox x:Name="cAddBlur" Content="Add average blur"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UseAverageBlur}"
+                                                              Margin="5"/>
+                                                    <CheckBox x:Name="cAddMedianBlur"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UseMedianBlur}"
+                                                              Content="Add median blur" Margin="5"/>
+                                                    <CheckBox x:Name="cAddGaussianBlur"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianBlur}"
+                                                              Content="Add gaussian blur" Margin="5"/>
+                                                    <CheckBox x:Name="cAddPepperNoise"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UsePepperNoise}"
+                                                              Content="Add pepper noise" Margin="5"/>
+                                                    <CheckBox x:Name="cAddGaussionNoise"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianNoise}"
+                                                              Content="Add gaussian noise" Margin="5"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Canvas>
@@ -161,7 +249,7 @@
                     </Grid>
                     <Grid Grid.Row="1">
                         <Button x:Name="btTryPreview" Margin="3" Background="#EEEEEE"
-                                Content="Try to preview the process"></Button>
+                                Content="Try to preview the process" Click="btTryPreview_Click"></Button>
                     </Grid>
                 </Grid>
 
@@ -183,11 +271,14 @@
                                TextWrapping="Wrap"
                                 AcceptsReturn="True"
                                 VerticalScrollBarVisibility="Auto">
-                        
+
                     </TextBox>
                 </GroupBox>
             </Grid>
             <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <GroupBox Header="Run" Margin="0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
@@ -198,7 +289,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5,10,5,5" HorizontalAlignment="Right">
                             <Button x:Name="btGenerateEachChar" Height="27" Width="150" Content="Generate Each Character" Margin="15,0,15,0"></Button>
-                            <Button x:Name="btGenerate" Height="27" Width="80" Content="Generate" Margin="15,0,15,0"></Button>
+                            <Button x:Name="btGenerate" Height="27" Width="80" Content="Generate" Margin="15,0,15,0" Click="btGenerate_Click"></Button>
                             <Button x:Name="btCancel" Height="27" Width="80" Content="Cancel" Margin="15,0,15,0"></Button>
                         </StackPanel>
                     </StackPanel>

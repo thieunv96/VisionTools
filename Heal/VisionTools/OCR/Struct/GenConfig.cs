@@ -39,6 +39,7 @@ namespace Heal.VisionTools.OCR.Struct
     }
     public class ImageSt
     {
+        public string ImageBGPath { get; set; }
         public Size ImageSize { get; set; }
         public int ImageNum { get; set; }
         public bool UseBGFromImage { get; set; }
@@ -71,12 +72,15 @@ namespace Heal.VisionTools.OCR.Struct
         {
             this.MinOpacity = 0.7;
             this.MaxOpacity = 1.0;
-            this.UseRandomText = true;
-            this.UseImportText = false;
+            this.MinLengthChar = 6;
+            this.MaxLengthChar = 8;
+            this.UseRandomText = false;
+            this.UseImportText = true;
             this.UseNumber = true;
             this.UseUpperChar = false;
             this.UseLowerChar = false;
             this.UseOtherChar = false;
+            this.ImportText = "123\nABC\nabc";
         }
     }
     public class EffectSt
@@ -88,11 +92,11 @@ namespace Heal.VisionTools.OCR.Struct
         public bool UseGaussianNoise { get; set; }
         public EffectSt()
         {
-            this.UseAverageBlur = false;
-            this.UseMedianBlur = false;
-            this.UseGaussianBlur = false;
-            this.UseGaussianNoise = false;
-            this.UsePepperNoise = false;
+            this.UseAverageBlur = true;
+            this.UseMedianBlur = true;
+            this.UseGaussianBlur = true;
+            this.UseGaussianNoise = true;
+            this.UsePepperNoise = true;
         }
     }
 }
