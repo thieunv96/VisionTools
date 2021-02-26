@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.IO;
+using System.Diagnostics;
 
 namespace Heal.VisionTools.OCR
 {
@@ -45,9 +46,6 @@ namespace Heal.VisionTools.OCR
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(null));
         }
-
-
-        #endregion
 
         private void btTryPreview_Click(object sender, RoutedEventArgs e)
         {
@@ -82,14 +80,11 @@ namespace Heal.VisionTools.OCR
             }
             mInSetColor = false;
         }
-        private void btGenerate_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine(mConfiguration.ImageSetting.UseBGFromColor);
-        }
+
 
         private void txtTextColor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(!mInSetColor)
+            if (!mInSetColor)
             {
                 var color = Struct.Action.SetColor(txtBTextColor, txtGTextColor, txtRTextColor);
                 if (color != null)
@@ -114,10 +109,10 @@ namespace Heal.VisionTools.OCR
 
         private void btBrowerFontFolder_Click(object sender, RoutedEventArgs e)
         {
-            using (System.Windows.Forms.FolderBrowserDialog fbd =  new System.Windows.Forms.FolderBrowserDialog())
+            using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog())
             {
                 string path = mConfiguration.FontSetting.FontPath;
-                if(Directory.Exists(path))
+                if (Directory.Exists(path))
                 {
                     fbd.SelectedPath = path;
                 }
@@ -144,6 +139,13 @@ namespace Heal.VisionTools.OCR
                     OnPropertyChanged();
                 }
             }
+        }
+        #endregion
+
+
+        private void btGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
