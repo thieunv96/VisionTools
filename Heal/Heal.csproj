@@ -126,6 +126,7 @@
     <Compile Include="VisionTools\OCR\Struct\Convertor.cs" />
     <Compile Include="VisionTools\OCR\Struct\Enum.cs" />
     <Compile Include="VisionTools\OCR\Struct\GenConfig.cs" />
+    <Compile Include="VisionTools\OCR\Struct\GenerateResult.cs" />
     <Compile Include="VisionTools\OCR\Utils\DrawCharacter.cs" />
     <Compile Include="VisionTools\OCR\Utils\PageGeneration.cs" />
     <Page Include="MainWindow.xaml">

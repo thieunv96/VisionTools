@@ -26,6 +26,45 @@ namespace Heal.VisionTools.OCR.Struct
         }
 
     }
+    public class FontStyleCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            System.Drawing.FontStyle? style = value as System.Drawing.FontStyle?;
+            switch (style)
+            {
+                case System.Drawing.FontStyle.Regular:
+                    return 0;
+                case System.Drawing.FontStyle.Bold:
+                    return 1;
+                case System.Drawing.FontStyle.Italic:
+                    return 2;
+                case System.Drawing.FontStyle.Underline:
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int? val = value as int?;
+            switch (val)
+            {
+                case 0:
+                    return System.Drawing.FontStyle.Regular;
+                case 1:
+                    return System.Drawing.FontStyle.Bold;
+                case 2:
+                    return System.Drawing.FontStyle.Italic;
+                case 3:
+                    return System.Drawing.FontStyle.Underline;
+                default:
+                    return System.Drawing.FontStyle.Regular;
+            }
+        }
+
+    }
     class Convertor
     {
         public static BitmapSource Bitmap2BitmapSource(System.Drawing.Bitmap bitmap)

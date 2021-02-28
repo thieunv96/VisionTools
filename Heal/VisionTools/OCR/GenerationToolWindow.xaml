@@ -15,6 +15,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <cvt:BrushColorCvt x:Key="BrushColor"/>
+            <cvt:FontStyleCvt x:Key="FontStyle"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid Margin="5">
@@ -49,172 +50,209 @@
                                 <StackPanel>
                                     <Expander Margin="5, 15, 5,5" Header="  Font"
                                               HorizontalContentAlignment="Left">
-                                        <Canvas x:Name="cvFont" Width="290" Margin="3,10,3,3" Height="210"
-                                              HorizontalAlignment="Left"
-                                              VerticalAlignment="Top"
+                                        <StackPanel x:Name="cvFont" Width="290" Margin="3,10,3,3"
+                                              HorizontalAlignment="Left" VerticalAlignment="Top"
                                                 >
-                                            <Label Content="Select Font folder:" Canvas.Left="9" Canvas.Top="1"/>
-                                            <TextBox  x:Name="txtFontFolder" Width="230" FontSize="16"
+                                            <Label Content="Select Font folder:" Margin="5"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox  x:Name="txtFontFolder" Width="230" FontSize="13"  Height="24"
                                                       Text="{Binding mConfiguration.FontSetting.FontPath}"
-                                                      IsReadOnly="True" Canvas.Left="15" Canvas.Top="28" ></TextBox>
-                                            <Button x:Name="btBrowerFontFolder" Width="25" Height="25" Content="..." Canvas.Left="255" Canvas.Top="27" Click="btBrowerFontFolder_Click"></Button>
-                                            <Label Content="Font Size:" Canvas.Left="10" Canvas.Top="58"/>
-                                            <TextBox x:Name="txtMinFontSize" Width="70" TextAlignment="Center"
+                                                      IsReadOnly="True" Margin="5" ></TextBox>
+                                                <Button x:Name="btBrowerFontFolder" 
+                                                        LostFocus="SaveConfig"
+                                                        Width="25" Height="25" Content="..." Margin="15,5,5,5" Click="btBrowerFontFolder_Click"></Button>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="Font Size:" Margin="5"/>
+                                                <TextBox x:Name="txtMinFontSize" Height="20" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.FontSetting.MinFontSize}"
-                                                     Canvas.Left="99" Canvas.Top="61"></TextBox>
-                                            <Label Content="~" Canvas.Left="169" Canvas.Top="54"/>
-                                            <TextBox x:Name="txtMaxFontSize" Width="70" TextAlignment="Center"
+                                                     Margin="5"></TextBox>
+                                                <Label Content="~" Canvas.Left="169" Canvas.Top="54"/>
+                                                <TextBox x:Name="txtMaxFontSize" Height="20" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.FontSetting.MaxFontSize}"
-                                                     Canvas.Left="188" Canvas.Top="61"/>
-                                            <Label Content="Letter spacing:" Canvas.Left="9" Canvas.Top="85"/>
-                                            <TextBox x:Name="txtLetterSpacing" 
+                                                     Margin="5"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Font style:"></Label>
+                                                <ComboBox Width="70"  LostFocus="SaveConfig" Margin="105,0,0,0" SelectedIndex="{Binding mConfiguration.FontSetting.FontStyle, Converter={StaticResource FontStyle}}" >
+                                                    <ComboBoxItem Content="Regular"></ComboBoxItem>
+                                                    <ComboBoxItem Content="Bold"></ComboBoxItem>
+                                                    <ComboBoxItem Content="Italic"></ComboBoxItem>
+                                                    <ComboBoxItem Content="Underline"></ComboBoxItem>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Letter spacing:" Canvas.Left="9"/>
+                                                <TextBox x:Name="txtLetterSpacing"  Height="20" LostFocus="SaveConfig"
                                                      Text="{Binding mConfiguration.FontSetting.LetterSpacing}"
-                                                     Width="70" TextAlignment="Center"
-                                                     Canvas.Left="98" Canvas.Top="88"
-                                                     ></TextBox>
-                                            <Label Content="Line spaceing:" Canvas.Left="9" Canvas.Top="112"/>
-                                            <TextBox x:Name="txtLineSpacing" Width="70" TextAlignment="Center"
+                                                     Width="70" TextAlignment="Center" Margin="81,0,0,0"
+                                                     />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Line spaceing:" />
+                                                <TextBox x:Name="txtLineSpacing" Width="70" Height="20" LostFocus="SaveConfig" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.FontSetting.LineSpacing}"
-                                                     Canvas.Left="98" Canvas.Top="115"></TextBox>
+                                                         Margin="83,0,0,0"
+                                                     ></TextBox>
+                                            </StackPanel>
+                                            <Label Content="Text color:" Margin="5"/>
                                             <StackPanel Orientation="Horizontal"  Canvas.Left="13" Canvas.Top="159" >
                                                 <Label Content="B:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtBTextColor"
+                                                <TextBox x:Name="txtBTextColor" LostFocus="SaveConfig"
                                                          Text="{Binding mConfiguration.FontSetting.TextColor.B, Mode=OneWay}"
                                                          Width="40" Height="20" Margin="5" 
                                                          TextChanged="txtTextColor_TextChanged"/>
                                                 <Label Content="G:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtGTextColor"  
+                                                <TextBox x:Name="txtGTextColor"   LostFocus="SaveConfig"
                                                          Text="{Binding mConfiguration.FontSetting.TextColor.G, Mode=OneWay}"
                                                          Width="40"  Height="20" Margin="5"
                                                          TextChanged="txtTextColor_TextChanged"/>
                                                 <Label Content="R:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtRTextColor" 
+                                                <TextBox x:Name="txtRTextColor"  LostFocus="SaveConfig"
                                                          Text="{Binding mConfiguration.FontSetting.TextColor.R, Mode=OneWay}"
                                                          Width="40" Height="20" Margin="5"
                                                          TextChanged="txtTextColor_TextChanged"/>
-                                                <Button x:Name="btSelectTextColor" Width="25"
+                                                <Button x:Name="btSelectTextColor" Width="25" LostFocus="SaveConfig"
                                                         Background="{Binding mConfiguration.FontSetting.TextColor, Converter={StaticResource BrushColor}}"
                                                         Height="25" Margin="15,5,5,5" Click="btSelectTextColor_Click"></Button>
                                             </StackPanel>
-                                            <Label Content="Text color:" Canvas.Left="9" Canvas.Top="139"/>
-                                        </Canvas>
+                                            
+                                        </StackPanel>
                                     </Expander>
                                     <Expander Margin="5" Header="  Image" HorizontalContentAlignment="Left">
-                                        <Canvas Width="290" Margin="3,10,3,3" Height="230"
+                                        <StackPanel Width="290" Margin="3,10,3,3"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
-                                            <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
-                                            <TextBox x:Name="txtWImageSize"  Width="70" TextAlignment="Center"
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Image size:" Canvas.Left="10" Canvas.Top="6"/>
+                                                <TextBox x:Name="txtWImageSize"  Height="20" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.ImageSetting.ImageWidth}"
-                                                     Canvas.Left="99" Canvas.Top="10"
                                                      ></TextBox>
-                                            <Label Content="x" Canvas.Left="171" Canvas.Top="5"/>
-                                            <TextBox x:Name="txtHImageSize" Width="70" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.ImageSetting.ImageHeight}"
-                                                     Canvas.Left="188" Canvas.Top="10"/>
-                                            <Label Content="Background:" Canvas.Left="6" Canvas.Top="70"/>
-                                            <RadioButton x:Name="rbBGFromImage"
+                                                <Label Content="x" Canvas.Left="171" Canvas.Top="5"/>
+                                                <TextBox x:Name="txtHImageSize" Height="20" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageHeight}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Generate:" Canvas.Left="10" Canvas.Top="40"/>
+                                                <TextBox x:Name="txtNumImageGenerate" Height="20" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.ImageSetting.ImageNum}"
+                                                     Margin="8,0,0,0"/>
+                                                <Label Content="image..."/>
+                                            </StackPanel>
+                                            <Label Content="Background:" Margin="10,10,0,0"/>
+                                            <RadioButton x:Name="rbBGFromImage" LostFocus="SaveConfig" Margin="5"
                                                          IsChecked="{Binding mConfiguration.ImageSetting.UseBGFromImage, Mode=TwoWay}"
                                                          Content="From folder image" Canvas.Left="18"
                                                          Canvas.Top="101"></RadioButton>
-
-                                            <RadioButton  x:Name="rbBGFromColor" Content="From Color" 
+                                            <StackPanel IsEnabled="{Binding ElementName=rbBGFromImage, Path=IsChecked}"  Margin="5" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="121" >
+                                                <TextBox x:Name="txtFolderBGImage" Width="230"  Height="24"
+                                                         Text="{Binding mConfiguration.ImageSetting.ImageBGPath}"
+                                                         FontSize="13" Margin="5" IsReadOnly="True"></TextBox>
+                                                <Button x:Name="btSelectFolderBGImage" LostFocus="SaveConfig" Width="25" Height="25" Content="..." Margin="5" Click="btSelectFolderBGImage_Click"></Button>
+                                            </StackPanel>
+                                            <RadioButton  x:Name="rbBGFromColor" Content="From Color"  Margin="5"
                                                           IsChecked="{Binding mConfiguration.ImageSetting.UseBGFromColor, Mode=TwoWay}"
                                                           Canvas.Left="19" Canvas.Top="162"/>
-                                            <StackPanel IsEnabled="{Binding ElementName=rbBGFromImage, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="121" >
-                                                <TextBox x:Name="txtFolderBGImage" Width="230"
-                                                         Text="{Binding mConfiguration.ImageSetting.ImageBGPath}"
-                                                         FontSize="16" Margin="5" IsReadOnly="True"></TextBox>
-                                                <Button x:Name="btSelectFolderBGImage" Width="25" Height="25" Content="..." Margin="5" Click="btSelectFolderBGImage_Click"></Button>
-                                            </StackPanel>
-                                            <StackPanel  IsEnabled="{Binding ElementName=rbBGFromColor, Path=IsChecked}" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="184" >
+
+                                            <StackPanel  IsEnabled="{Binding ElementName=rbBGFromColor, Path=IsChecked}" Margin="5" Orientation="Horizontal"  Canvas.Left="10" Canvas.Top="184" >
                                                 <Label Content="B:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox  x:Name="txtBImageColor" 
+                                                <TextBox  x:Name="txtBImageColor"  LostFocus="SaveConfig"
                                                           TextChanged="txtBGColor_TextChanged"
                                                           Text="{Binding mConfiguration.ImageSetting.BGColor.B, Mode=OneWay}"
                                                           Width="40" Height="20" Margin="5"/>
                                                 <Label Content="G:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox x:Name="txtGImageColor"  
+                                                <TextBox x:Name="txtGImageColor"   LostFocus="SaveConfig"
                                                          TextChanged="txtBGColor_TextChanged"
                                                          Text="{Binding mConfiguration.ImageSetting.BGColor.G, Mode=OneWay}"
                                                          Width="40"  Height="20" Margin="5"/>
                                                 <Label Content="R:" VerticalContentAlignment="Center"></Label>
-                                                <TextBox  x:Name="txtRImageColor" 
+                                                <TextBox  x:Name="txtRImageColor"  LostFocus="SaveConfig"
                                                           TextChanged="txtBGColor_TextChanged"
                                                           Text="{Binding mConfiguration.ImageSetting.BGColor.R, Mode=OneWay}"
                                                           Width="40" Height="20" Margin="5"/>
-                                                <Button  x:Name="btSelectBGColor"
+                                                <Button  x:Name="btSelectBGColor" LostFocus="SaveConfig"
                                                          Click="btSelectBGColor_Click"
                                                          Background="{Binding mConfiguration.ImageSetting.BGColor, Converter={StaticResource BrushColor}}"
                                                          Width="25" Height="25" Margin="15,5,5,5"></Button>
                                             </StackPanel>
-                                            <Label Content="Generate:" Canvas.Left="10" Canvas.Top="40"/>
-                                            <TextBox x:Name="txtNumImageGenerate" Width="70" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.ImageSetting.ImageNum}"
-                                                     Canvas.Left="99" Canvas.Top="44"/>
-                                            <Label Content="image..." Canvas.Left="173" Canvas.Top="41"/>
-                                        </Canvas>
+                                            
+                                            
+                                        </StackPanel>
                                     </Expander>
                                     <Expander Margin="5" Header="  Text" HorizontalContentAlignment="Left">
-                                        <Canvas Width="290" Margin="3,10,3,3" Height="300"
+                                        <StackPanel Width="290" Margin="3,10,3,3"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
-                                            <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
-                                            <TextBox x:Name="txtMinOpacity" Width="70" TextAlignment="Center"
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
+                                                <TextBox x:Name="txtMinOpacity" Width="70" LostFocus="SaveConfig" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.TextSetting.MinOpacity}"
-                                                     Canvas.Left="99" Canvas.Top="10"></TextBox>
-                                            <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
-                                            <TextBox x:Name="txtMaxOpacity" Width="70" TextAlignment="Center"
+                                                     Height="20" Margin="51,0,0,0"></TextBox>
+                                                <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
+                                                <TextBox x:Name="txtMaxOpacity" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
                                                      Text="{Binding mConfiguration.TextSetting.MaxOpacity}"
-                                                     Canvas.Left="188" Canvas.Top="10"/>
-                                            <RadioButton x:Name="rbRandomText" 
+                                                     Height="20"/>
+                                            </StackPanel>
+
+                                            <RadioButton x:Name="rbRandomText"  LostFocus="SaveConfig"
                                                          IsChecked="{Binding mConfiguration.TextSetting.UseRandomText}"
-                                                         Content="Random text" Canvas.Left="14" Canvas.Top="42"></RadioButton>
+                                                         Content="Random text" Margin="5,10,5,5"></RadioButton>
                                             <StackPanel Canvas.Left="19" Canvas.Top="61" IsEnabled="{Binding ElementName=rbRandomText, Path=IsChecked}">
                                                 <StackPanel  Orientation="Horizontal" >
                                                     <Label Content="Lenght Char:" Canvas.Left="10" Canvas.Top="6"/>
-                                                    <TextBox x:Name="txtMinLenghtChr"  Width="70" TextAlignment="Center"
+                                                    <TextBox x:Name="txtMinLenghtChr" LostFocus="SaveConfig"  Width="70" TextAlignment="Center"
                                                              Text="{Binding mConfiguration.TextSetting.MinLengthChar}" 
-                                                             Margin="30,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                             Margin="32,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
                                                     <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
-                                                    <TextBox x:Name="txtMaxLenghtChr"  Width="70" TextAlignment="Center"
+                                                    <TextBox x:Name="txtMaxLenghtChr" LostFocus="SaveConfig"  Width="70" TextAlignment="Center"
                                                              Text="{Binding mConfiguration.TextSetting.MaxLengthChar}" 
                                                              Height="20"  Canvas.Left="188" Canvas.Top="10"/>
                                                 </StackPanel>
+                                                <StackPanel  Orientation="Horizontal" >
+                                                    <Label Content="Num Line:" Canvas.Left="10" Canvas.Top="6"/>
+                                                    <TextBox x:Name="txtMinLenghtChr1" LostFocus="SaveConfig"  Width="70" TextAlignment="Center"
+                                                        Text="{Binding mConfiguration.TextSetting.MinNumberOfLine}" 
+                                                        Margin="45,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"/>
+                                                    <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
+                                                    <TextBox x:Name="txtMaxLenghtChr1" LostFocus="SaveConfig"  Width="70" TextAlignment="Center"
+                                                        Text="{Binding mConfiguration.TextSetting.MaxNumberOfLine}" 
+                                                        Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                </StackPanel>
                                                 <StackPanel Canvas.Left="15" Canvas.Top="93">
                                                     <Label Content="Select character:"></Label>
-                                                    <CheckBox x:Name="cNumber" Content="Number (0~9)" Margin="5"
+                                                    <CheckBox x:Name="cNumber" Content="Number (0~9)" Margin="5" LostFocus="SaveConfig"
                                                               IsChecked="{Binding mConfiguration.TextSetting.UseNumber}"></CheckBox>
                                                     <CheckBox x:Name="cUpperChar"  Content="Upper character (A~Z)" 
-                                                              Margin="5"
+                                                              Margin="5" LostFocus="SaveConfig"
                                                               IsChecked="{Binding mConfiguration.TextSetting.UseUpperChar}"></CheckBox>
                                                     <CheckBox x:Name="cLowerChar"  Content="Lower character (a~z)"
-                                                              Margin="5"
+                                                              Margin="5" LostFocus="SaveConfig"
                                                               IsChecked="{Binding mConfiguration.TextSetting.UseLowerChar}"></CheckBox>
                                                     <StackPanel Orientation="Horizontal">
                                                         <CheckBox x:Name="cOtherChar" Content="Other character:" 
-                                                                  Margin="5" 
+                                                                  Margin="5"  LostFocus="SaveConfig"
                                                                   IsChecked="{Binding mConfiguration.TextSetting.UseOtherChar}"></CheckBox>
-                                                        <TextBox x:Name="txtOtherChar" Margin="10,0,0,0"
-                                                                 Width="130" 
+                                                        <TextBox x:Name="txtOtherChar" Margin="10,0,0,0"  Height="20"
+                                                                 Width="130"  LostFocus="SaveConfig"
                                                                  Text="{Binding mConfiguration.TextSetting.OtherChar}"
                                                                  IsEnabled="{Binding ElementName=cOtherChar, Path=IsChecked}"></TextBox>
                                                     </StackPanel>
                                                 </StackPanel>
+                                                
                                             </StackPanel>
-                                            <RadioButton x:Name="rbImportText" Content="Import text"
+                                            <RadioButton x:Name="rbImportText" Content="Import text" LostFocus="SaveConfig"
                                                          IsChecked="{Binding mConfiguration.TextSetting.UseImportText}"
-                                                         Canvas.Left="14" Canvas.Top="221"></RadioButton>
+                                                         Margin="5,10,5,5"></RadioButton>
                                             <StackPanel Canvas.Left="23" Canvas.Top="243" IsEnabled="{Binding ElementName=rbImportText, Path=IsChecked}">
                                                 <TextBox x:Name="txtTextImport" Width="256" Height="50"
-                                                        TextWrapping="Wrap"
+                                                        TextWrapping="Wrap" LostFocus="SaveConfig"
                                                         AcceptsReturn="True"
                                                         VerticalScrollBarVisibility="Auto"
                                                         Text="{Binding mConfiguration.TextSetting.ImportText}" />
                                             </StackPanel>
-                                        </Canvas>
+                                        </StackPanel>
                                     </Expander>
                                     <Expander Margin="5" Header="  Effect" HorizontalContentAlignment="Left">
                                         <Canvas Width="290" Margin="3,10,3,3" Height="150"
@@ -226,19 +264,19 @@
                                                     <Label Content="Add effect / defect:"/>
                                                     <CheckBox x:Name="cAddBlur" Content="Add average blur"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseAverageBlur}"
-                                                              Margin="5"/>
+                                                              Margin="5" LostFocus="SaveConfig"/>
                                                     <CheckBox x:Name="cAddMedianBlur"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseMedianBlur}"
-                                                              Content="Add median blur" Margin="5"/>
+                                                              Content="Add median blur" Margin="5" LostFocus="SaveConfig"/>
                                                     <CheckBox x:Name="cAddGaussianBlur"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianBlur}"
-                                                              Content="Add gaussian blur" Margin="5"/>
+                                                              Content="Add gaussian blur" Margin="5" LostFocus="SaveConfig"/>
                                                     <CheckBox x:Name="cAddPepperNoise"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UsePepperNoise}"
-                                                              Content="Add pepper noise" Margin="5"/>
+                                                              Content="Add pepper noise" Margin="5" LostFocus="SaveConfig"/>
                                                     <CheckBox x:Name="cAddGaussionNoise"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianNoise}"
-                                                              Content="Add gaussian noise" Margin="5"/>
+                                                              Content="Add gaussian noise" Margin="5" LostFocus="SaveConfig"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Canvas>
@@ -254,7 +292,7 @@
                 </Grid>
 
                 <GroupBox Grid.Column="0" Header="Preview">
-                    <Border ClipToBounds="True" Background="#EEEEEE">
+                    <Border ClipToBounds="True" Background="#DDDDDD" Margin="5">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <Image x:Name="imbPreview" Stretch="None"></Image>
                         </ScrollViewer>
@@ -281,7 +319,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Header="Run" Margin="0">
+                <GroupBox Header="Generation &amp; Save" Margin="0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <Label Content="Save folder:"></Label>
@@ -292,7 +330,7 @@
                             <CheckBox x:Name="cSaveConfig" Content="Save Config" IsChecked="True" VerticalContentAlignment="Center" Margin="25,0,0,0"></CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5,10,5,5" HorizontalAlignment="Right">
-                            <Button x:Name="btGenerateEachChar" Height="27" Width="150" Content="Generate Each Character" Margin="15,0,15,0"></Button>
+                            <Button x:Name="btGenerateEachChar" Height="27" Width="150" Content="Generate Each Character" Margin="15,0,15,0" Click="btGenerateEachChar_Click"></Button>
                             <Button x:Name="btGenerate" Height="27" Width="80" Content="Generate" Margin="15,0,15,0" Click="btGenerate_Click"></Button>
                             <Button x:Name="btCancel" Height="27" Width="80" Content="Cancel" Margin="15,0,15,0"></Button>
                         </StackPanel>

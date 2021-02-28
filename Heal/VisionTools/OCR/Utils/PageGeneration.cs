@@ -15,29 +15,39 @@ namespace Heal.VisionTools.OCR.Utils
 {
     class PageGeneration
     {
+        private static System.Drawing.Text.PrivateFontCollection mFontCollection = new System.Drawing.Text.PrivateFontCollection();
         public Image<Bgr, byte> GetPageImage(Struct.GenConfig Config)
         {
-            Image<Bgr, byte> image = InitImage(Config.ImageSetting);
-            if(image != null)
+            Image<Bgr, byte> imageOutput = InitImage(Config.ImageSetting);
+            if(imageOutput != null)
             {
+                Random random = new Random();
+                int xSt = random.Next(0, imageOutput.Width);
+                int ySt = random.Next(0, imageOutput.Height);
+                int numLine = random.Next((int)Config.TextSetting.MinNumberOfLine, (int)Config.TextSetting.MaxNumberOfLine + 1);
+                Rectangle ROISt = new Rectangle(xSt, ySt, imageOutput.Width - xSt, imageOutput.Height - ySt);
+                imageOutput.ROI = ROISt;
                 Font font = GetFont(Config.FontSetting);
-                if(font != null)
+                using (Image<Bgr, byte> image = imageOutput.Copy())
                 {
-                    int heightChar = GetHeightOneChar(font);
-                    string[] content = GetArrayContent(Config.TextSetting, heightChar,(int)Config.ImageSetting.ImageHeight);
-                    Utils.DrawCharacter draw = new DrawCharacter();
-                    for (int row = 0; row < content.Length; row++)
+                    if (font != null)
                     {
-                        int x = 0;
-                        for (int col = 0; col < content[row].Length; col++)
+                        int heightChar = GetHeightOneChar(font);
+                        string[] content = GetArrayContent(Config.TextSetting, heightChar, (int)Config.ImageSetting.ImageHeight);
+                        Utils.DrawCharacter draw = new DrawCharacter();
+                        for (int row = 0; row < content.Length; row++)
                         {
-                            lock(font)
+                            if (Config.TextSetting.UseRandomText)
+                                if (row > numLine - 1)
+                                    break;
+                            int x = 0;
+                            for (int col = 0; col < content[row].Length; col++)
                             {
                                 string chr = content[row][col].ToString();
                                 DrawResult result = draw.DrawText(chr, font, Config.FontSetting.TextColor);
                                 Rectangle ROI = new Rectangle(x, (int)(row * (heightChar + 0.2 * heightChar)), result.Image.Width, result.Image.Height);
                                 if (ROI.X >= image.Width || ROI.Y >= image.Height)
-                                    continue;
+                                    break;
                                 image.ROI = ROI;
                                 if (image.Width < result.Image.Width || image.Height < result.Image.Height)
                                 {
@@ -51,15 +61,17 @@ namespace Heal.VisionTools.OCR.Utils
                                     CvInvoke.Add(result.Image, image, imageAdd);
                                     imageAdd.CopyTo(image);
                                 }
-
                                 image.ROI = Rectangle.Empty;
                                 x += result.Image.Width;
                             }
                         }
                     }
+                    image.CopyTo(imageOutput);
                 }
+
+                imageOutput.ROI = Rectangle.Empty;
             }
-            return image;
+            return imageOutput;
         }
         public string[] GetArrayContent(Struct.TextSt textSt, int heightChar, int heightImage)
         {
@@ -136,11 +148,19 @@ namespace Heal.VisionTools.OCR.Utils
             {
                 Random random = new Random();
                 int id = random.Next(0, listFont.Length);
-                System.Drawing.Text.PrivateFontCollection collection = new System.Drawing.Text.PrivateFontCollection();
-                collection.AddFontFile(listFont[id]);
-                FontFamily fontFamily = new FontFamily(collection.Families[0].Name, collection);
-                int fontSize = random.Next(Convert.ToInt32(fontSt.MinFontSize * 10), Convert.ToInt32((fontSt.MaxFontSize-1) * 10));
-                font = new Font(fontFamily, (float)(fontSize) / 10);
+                if(mFontCollection != null)
+                {
+                    mFontCollection.Dispose();
+                    mFontCollection = null;
+                }
+                mFontCollection = new System.Drawing.Text.PrivateFontCollection();
+                mFontCollection.AddFontFile(listFont[id]);
+                using (FontFamily fontFamily = new FontFamily(mFontCollection.Families[0].Name, mFontCollection))
+                {
+                    int fontSize = random.Next(Convert.ToInt32(fontSt.MinFontSize * 10), Convert.ToInt32((fontSt.MaxFontSize) * 10));
+                    font = new Font(fontFamily, (float)(fontSize) / 10, fontSt.FontStyle);
+                }
+                
             }
             return font;
         }

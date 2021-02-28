@@ -16,6 +16,8 @@ using System.IO;
 using System.Diagnostics;
 using Emgu.CV.Structure;
 using Emgu.CV;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Heal.VisionTools.OCR
 {
@@ -29,20 +31,43 @@ namespace Heal.VisionTools.OCR
         public bool mInSetColor = false;
         public Struct.GenConfig mConfiguration
         {
-            get { return mGenConfig; }
+            get { 
+                return mGenConfig;
+            }
             set
             {
                 mGenConfig = value; 
                 OnPropertyChanged();
+                
             }
+        }
+        private Struct.GenConfig LoadConfigFromString(string ConfigStr)
+        {
+            Struct.GenConfig configLoaded = null;
+            try
+            {
+                configLoaded = JsonConvert.DeserializeObject<Struct.GenConfig>(ConfigStr);
+            }
+            catch { return null; }
+            return configLoaded;
         }
         public GenerationToolWindow()
         {
             mSavePath = "C:\\";
+            var config = LoadConfigFromString(Properties.Settings.Default.ConfigChanged);
+            if (config != null)
+            {
+                mConfiguration = config;
+            }
             InitializeComponent();
             this.DataContext = this;
         }
         #region Binding to view
+        private void SaveConfig(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ConfigChanged = JsonConvert.SerializeObject(mGenConfig);
+            Properties.Settings.Default.Save();
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged()
         {
@@ -55,10 +80,11 @@ namespace Heal.VisionTools.OCR
             Stopwatch sw = new Stopwatch();
             sw.Start();
             Utils.PageGeneration genPage = new Utils.PageGeneration();
+            //genPage.test(mConfiguration);
             var imagePage = genPage.GetPageImage(mConfiguration);
-            if(imagePage != null)
+            if (imagePage != null)
             {
-                txtLog.Text += "Try to preview the process successfully!\n";
+                Log($"Try to preview the process successfully in {sw.ElapsedMilliseconds} ms...!\n");
                 var bms = Struct.Convertor.Bitmap2BitmapSource(imagePage.Bitmap);
                 imbPreview.Source = bms;
                 imagePage.Dispose();
@@ -66,11 +92,14 @@ namespace Heal.VisionTools.OCR
             }
             else
             {
-                txtLog.Text += "Try to preview the process failed!\n";
+                Log("Try to preview the process failed!\n");
             }
-            Console.WriteLine($"{imbPreview.ActualWidth} x { imbPreview.ActualHeight}");
         }
-
+        private void Log(string msg)
+        {
+            txtLog.Text += msg;
+            txtLog.ScrollToEnd();
+        }
         private void btSelectTextColor_Click(object sender, RoutedEventArgs e)
         {
             mInSetColor = true;
@@ -182,6 +211,11 @@ namespace Heal.VisionTools.OCR
         {
 
             
+        }
+
+        private void btGenerateEachChar_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         

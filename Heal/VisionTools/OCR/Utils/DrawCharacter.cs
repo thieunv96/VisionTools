@@ -6,42 +6,38 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using System.Threading;
 
 namespace Heal.VisionTools.OCR.Utils
 {
     class DrawCharacter
     {
-        private Object ObjLock = new Object();
         public Bitmap DrawText(string Content, Font TextFont,Color Backgound, Color Foreground)
         {
             Bitmap outImg = null;
-            lock (ObjLock)
+            SizeF textSize = new SizeF(1, 1);
+            using (Image img = new Bitmap(1, 1))
+            using (Graphics temp = Graphics.FromImage(img))
             {
-                SizeF textSize = new SizeF(1, 1);
-                using (Image img = new Bitmap(1, 1))
-                using (Graphics temp = Graphics.FromImage(img))
-                {
-                    textSize = temp.MeasureString(Content, TextFont);
-                }
-                outImg = new Bitmap((int)textSize.Width, (int)textSize.Height);
-                using (Graphics drawing = Graphics.FromImage(outImg))
-                {
-                    drawing.Clear(Backgound);
-                    Brush textBrush = new SolidBrush(Foreground);
-                    drawing.DrawString(Content, TextFont, textBrush, 0, 0);
-
-                }
+                textSize = temp.MeasureString(Content, TextFont);
+            }
+            outImg = new Bitmap((int)textSize.Width, (int)textSize.Height);
+            using (Graphics g = Graphics.FromImage(outImg))
+            {
+                g.Clear(Backgound);
+                Brush textBrush = new SolidBrush(Foreground);
+                g.DrawString(Content, TextFont, textBrush, 0, 0);
             }
             return outImg;
         }
         public DrawResult DrawText(string Content, Font TextFont,  Color TextColor)
         {
             DrawResult result = new DrawResult();
-            Bitmap bmMask = DrawText(Content, TextFont, Color.White, Color.Black);
+            using (Bitmap bmMask = DrawText(Content, TextFont, Color.White, Color.Black))
             {
                 result.Mask = new Image<Bgr, byte>(bmMask);
             }
-            Bitmap image = DrawText(Content, TextFont, Color.Black, TextColor);
+            using (Bitmap image = DrawText(Content, TextFont, Color.Black, TextColor))
             {
                 result.Image = new Image<Bgr, byte>(image);
             }
