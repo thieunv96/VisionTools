@@ -22,8 +22,8 @@ namespace Heal.VisionTools.OCR.Utils
             if(imageOutput != null)
             {
                 Random random = new Random();
-                int xSt = random.Next(0, imageOutput.Width);
-                int ySt = random.Next(0, imageOutput.Height);
+                int xSt = 0;// random.Next(0, imageOutput.Width);
+                int ySt = 0;// random.Next(0, imageOutput.Height);
                 int numLine = random.Next((int)Config.TextSetting.MinNumberOfLine, (int)Config.TextSetting.MaxNumberOfLine + 1);
                 Rectangle ROISt = new Rectangle(xSt, ySt, imageOutput.Width - xSt, imageOutput.Height - ySt);
                 imageOutput.ROI = ROISt;
@@ -35,6 +35,7 @@ namespace Heal.VisionTools.OCR.Utils
                         int heightChar = GetHeightOneChar(font);
                         string[] content = GetArrayContent(Config.TextSetting, heightChar, (int)Config.ImageSetting.ImageHeight);
                         Utils.DrawCharacter draw = new DrawCharacter();
+                        int y = (int) (0.2 * heightChar);
                         for (int row = 0; row < content.Length; row++)
                         {
                             if (Config.TextSetting.UseRandomText)
@@ -43,9 +44,10 @@ namespace Heal.VisionTools.OCR.Utils
                             int x = 0;
                             for (int col = 0; col < content[row].Length; col++)
                             {
+
                                 string chr = content[row][col].ToString();
                                 DrawResult result = draw.DrawText(chr, font, Config.FontSetting.TextColor);
-                                Rectangle ROI = new Rectangle(x, (int)(row * (heightChar + 0.2 * heightChar)), result.Image.Width, result.Image.Height);
+                                Rectangle ROI = new Rectangle(x, y, result.Image.Width, result.Image.Height);
                                 if (ROI.X >= image.Width || ROI.Y >= image.Height)
                                     break;
                                 image.ROI = ROI;
@@ -55,15 +57,26 @@ namespace Heal.VisionTools.OCR.Utils
                                     result.Image.ROI = ROIResult;
                                     result.Mask.ROI = ROIResult;
                                 }
+                                double opacity = random.Next(Convert.ToInt32(Config.TextSetting.MinOpacity * 100), Convert.ToInt32(Config.TextSetting.MaxOpacity * 100)) / 100.0;
                                 using (Image<Bgr, byte> imageAdd = new Image<Bgr, byte>(result.Image.Size))
+                                using (Image<Bgr, byte> imageOpacity = new Image<Bgr, byte>(result.Image.Size))
+                                using (Image<Bgr, byte> imageMaskInv = new Image<Bgr, byte>(result.Mask.Size))
                                 {
+                                    CvInvoke.BitwiseNot(result.Mask, imageMaskInv);
+                                    //CvInvoke.Imshow("", imageMaskInv);
+                                    //CvInvoke.WaitKey(0);
+                                    CvInvoke.AddWeighted(image, 1-opacity, result.Image, opacity, 0, imageOpacity);
+                                    CvInvoke.BitwiseAnd(imageOpacity, imageMaskInv, imageOpacity);
                                     CvInvoke.BitwiseAnd(image, result.Mask, image);
-                                    CvInvoke.Add(result.Image, image, imageAdd);
+                                    CvInvoke.Add(imageOpacity, image, imageAdd);
                                     imageAdd.CopyTo(image);
                                 }
                                 image.ROI = Rectangle.Empty;
                                 x += result.Image.Width;
+                                x += Config.FontSetting.LetterSpacing;
                             }
+                            y += (int)(heightChar + (0.2 * heightChar));
+                            y += Config.FontSetting.LineSpacing;
                         }
                     }
                     image.CopyTo(imageOutput);

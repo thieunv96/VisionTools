@@ -178,6 +178,14 @@ namespace Heal.VisionTools.OCR.Struct
         public bool UseGaussianBlur { get; set; }
         public bool UsePepperNoise { get; set; }
         public bool UseGaussianNoise { get; set; }
+        private int _MinKernelAverageBlur { get; set; }
+        private int _MaxKernelAverageBlur { get; set; }
+        private int _MinKernelMedianBlur { get; set; }
+        private int _MaxKernelMedianBlur { get; set; }
+        private int _MinKernelGaussianBlur { get; set; }
+        private int _MaxKernelGaussianBlur { get; set; }
+        private int _MinPercentPepperBlur { get; set; }
+        private int _MaxPercentPepperBlur { get; set; }
         public EffectSt()
         {
             this.UseAverageBlur = true;

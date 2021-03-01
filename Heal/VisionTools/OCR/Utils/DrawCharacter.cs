@@ -36,6 +36,7 @@ namespace Heal.VisionTools.OCR.Utils
             using (Bitmap bmMask = DrawText(Content, TextFont, Color.White, Color.Black))
             {
                 result.Mask = new Image<Bgr, byte>(bmMask);
+                //CvInvoke.Threshold(result.Mask, result.Mask, 245, 255, Emgu.CV.CvEnum.ThresholdType.Binary);
             }
             using (Bitmap image = DrawText(Content, TextFont, Color.Black, TextColor))
             {

@@ -73,6 +73,16 @@
                                                      Margin="5"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
+                                                <TextBox x:Name="txtMinOpacity" Width="70" LostFocus="SaveConfig" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.TextSetting.MinOpacity}"
+                                                     Height="20" Margin="18,0,5,0"></TextBox>
+                                                <Label Content="~" Canvas.Left="169" Canvas.Top="54"/>
+                                                <TextBox x:Name="txtMaxOpacity" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
+                                                     Text="{Binding mConfiguration.TextSetting.MaxOpacity}"
+                                                     Height="20" Margin="5"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
                                                 <Label Content="Font style:"></Label>
                                                 <ComboBox Width="70"  LostFocus="SaveConfig" Margin="105,0,0,0" SelectedIndex="{Binding mConfiguration.FontSetting.FontStyle, Converter={StaticResource FontStyle}}" >
                                                     <ComboBoxItem Content="Regular"></ComboBoxItem>
@@ -185,16 +195,7 @@
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
-                                            <StackPanel Orientation="Horizontal" Margin="5">
-                                                <Label Content="Opacity:" Canvas.Left="10" Canvas.Top="6"/>
-                                                <TextBox x:Name="txtMinOpacity" Width="70" LostFocus="SaveConfig" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.TextSetting.MinOpacity}"
-                                                     Height="20" Margin="51,0,0,0"></TextBox>
-                                                <Label Content="~" Canvas.Left="171" Canvas.Top="5"/>
-                                                <TextBox x:Name="txtMaxOpacity" LostFocus="SaveConfig" Width="70" TextAlignment="Center"
-                                                     Text="{Binding mConfiguration.TextSetting.MaxOpacity}"
-                                                     Height="20"/>
-                                            </StackPanel>
+                                            
 
                                             <RadioButton x:Name="rbRandomText"  LostFocus="SaveConfig"
                                                          IsChecked="{Binding mConfiguration.TextSetting.UseRandomText}"
