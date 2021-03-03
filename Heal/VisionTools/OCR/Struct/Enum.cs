@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace Heal.VisionTools.OCR.Struct
 {
-    class Enum
+    enum Effect_Type
     {
-
+        AverageBlur,
+        MedianBlur,
+        GaussianBlur,
+        SaltnPepperNoise
     }
 }

@@ -209,7 +209,7 @@ namespace Heal.VisionTools.OCR
 
         private void btGenerate_Click(object sender, RoutedEventArgs e)
         {
-
+            Random rd = new Random();
             
         }
 

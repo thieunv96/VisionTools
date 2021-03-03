@@ -22,8 +22,13 @@ namespace Heal.VisionTools.OCR.Utils
             if(imageOutput != null)
             {
                 Random random = new Random();
-                int xSt = 0;// random.Next(0, imageOutput.Width);
-                int ySt = 0;// random.Next(0, imageOutput.Height);
+                int xSt = 0;
+                int ySt = 0;
+                if(Config.EffectcSetting.UseRandomStartPosition)
+                {
+                    xSt = random.Next(0, imageOutput.Width);
+                    ySt = random.Next(0, imageOutput.Height);
+                }
                 int numLine = random.Next((int)Config.TextSetting.MinNumberOfLine, (int)Config.TextSetting.MaxNumberOfLine + 1);
                 Rectangle ROISt = new Rectangle(xSt, ySt, imageOutput.Width - xSt, imageOutput.Height - ySt);
                 imageOutput.ROI = ROISt;
@@ -39,17 +44,18 @@ namespace Heal.VisionTools.OCR.Utils
                         for (int row = 0; row < content.Length; row++)
                         {
                             if (Config.TextSetting.UseRandomText)
-                                if (row > numLine - 1)
+                                if (row > numLine - 1 || y > image.Height)
                                     break;
                             int x = 0;
                             for (int col = 0; col < content[row].Length; col++)
                             {
-
                                 string chr = content[row][col].ToString();
                                 DrawResult result = draw.DrawText(chr, font, Config.FontSetting.TextColor);
                                 Rectangle ROI = new Rectangle(x, y, result.Image.Width, result.Image.Height);
                                 if (ROI.X >= image.Width || ROI.Y >= image.Height)
                                     break;
+                                if (ROI.X < 0 || ROI.Y < 0)
+                                    continue;
                                 image.ROI = ROI;
                                 if (image.Width < result.Image.Width || image.Height < result.Image.Height)
                                 {
@@ -63,8 +69,6 @@ namespace Heal.VisionTools.OCR.Utils
                                 using (Image<Bgr, byte> imageMaskInv = new Image<Bgr, byte>(result.Mask.Size))
                                 {
                                     CvInvoke.BitwiseNot(result.Mask, imageMaskInv);
-                                    //CvInvoke.Imshow("", imageMaskInv);
-                                    //CvInvoke.WaitKey(0);
                                     CvInvoke.AddWeighted(image, 1-opacity, result.Image, opacity, 0, imageOpacity);
                                     CvInvoke.BitwiseAnd(imageOpacity, imageMaskInv, imageOpacity);
                                     CvInvoke.BitwiseAnd(image, result.Mask, image);
@@ -73,6 +77,8 @@ namespace Heal.VisionTools.OCR.Utils
                                 }
                                 image.ROI = Rectangle.Empty;
                                 x += result.Image.Width;
+                                if (x >= image.Width)
+                                    break;
                                 x += Config.FontSetting.LetterSpacing;
                             }
                             y += (int)(heightChar + (0.2 * heightChar));
@@ -84,7 +90,58 @@ namespace Heal.VisionTools.OCR.Utils
 
                 imageOutput.ROI = Rectangle.Empty;
             }
+            AddEffect(imageOutput, Config.EffectcSetting);
             return imageOutput;
+        }
+        public void AddEffect(Image<Bgr, byte> image, Struct.EffectSt effectSt)
+        {
+            List<Struct.Effect_Type> listEffect = new List<Struct.Effect_Type>();
+            if (effectSt.UseAverageBlur)
+                listEffect.Add(Struct.Effect_Type.AverageBlur);
+            if (effectSt.UseMedianBlur)
+                listEffect.Add(Struct.Effect_Type.MedianBlur);
+            if (effectSt.UseGaussianBlur)
+                listEffect.Add(Struct.Effect_Type.GaussianBlur);
+            if (effectSt.UsePepperNoise)
+                listEffect.Add(Struct.Effect_Type.SaltnPepperNoise);
+            if(listEffect.Count > 0)
+            {
+                Random random = new Random();
+                int id = random.Next(0, listEffect.Count);
+                int k = 0;
+                switch (listEffect[id])
+                {
+                    case Struct.Effect_Type.AverageBlur:
+                        k = random.Next((int)effectSt.MinKernelAverageBlur, (int)effectSt.MaxKernelAverageBlur);
+                        CvInvoke.Blur(image, image, new Size(k, k), new Point(-1, -1), Emgu.CV.CvEnum.BorderType.Default);
+                        break;
+                    case Struct.Effect_Type.MedianBlur:
+                        k = random.Next((int)effectSt.MinKernelMedianBlur, (int)effectSt.MaxKernelMedianBlur);
+                        k = k % 2 == 0 ? k + 1: k;
+                            CvInvoke.MedianBlur(image, image, k);
+                        break;
+                    case Struct.Effect_Type.GaussianBlur:
+                        k = random.Next((int)effectSt.MinKernelAverageBlur, (int)effectSt.MaxKernelAverageBlur);
+                        k = k % 2 == 0 ? k + 1 : k;
+                        CvInvoke.GaussianBlur(image, image, new Size(k, k), 0);
+                        break;
+                    case Struct.Effect_Type.SaltnPepperNoise:
+                        double percent = random.Next((int)(effectSt.MinPercentPepperNoise * 100), (int)(effectSt.MaxPercentPepperNoise * 100)) / 100.0;
+                        int num = Convert.ToInt32((percent * (double)(image.Width * image.Height)) / 100);
+                        for (int i = 0; i < num; i++)
+                        {
+                            int x = random.Next(0, image.Width);
+                            int y = random.Next(0, image.Height);
+                            int val = random.Next(0, 256);
+                            val = val > 127 ? 255 : 0;
+                            image[y, x] = new Bgr(val, val, val);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+            }
         }
         public string[] GetArrayContent(Struct.TextSt textSt, int heightChar, int heightImage)
         {

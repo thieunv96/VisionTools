@@ -256,31 +256,83 @@
                                         </StackPanel>
                                     </Expander>
                                     <Expander Margin="5" Header="  Effect" HorizontalContentAlignment="Left">
-                                        <Canvas Width="290" Margin="3,10,3,3" Height="150"
+                                        <StackPanel Width="290" Margin="3,10,3,3" 
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                                 >
                                             <StackPanel Canvas.Left="19" Canvas.Top="5">
                                                 <StackPanel>
                                                     <Label Content="Add effect / defect:"/>
-                                                    <CheckBox x:Name="cAddBlur" Content="Add average blur"
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cRandomStartPoint" Content="Random start point" Width="130"
+                                                              IsChecked="{Binding mConfiguration.EffectcSetting.UseRandomStartPosition}"
+                                                              Margin="5" LostFocus="SaveConfig"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cAddBlur" Content="Add average blur" Width="120"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseAverageBlur}"
                                                               Margin="5" LostFocus="SaveConfig"/>
-                                                    <CheckBox x:Name="cAddMedianBlur"
+                                                        <TextBox x:Name="txtMinKAverageBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MinKernelAverageBlur}" 
+                                                             Margin="10,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                        <Label Content="~" IsEnabled="{Binding ElementName=cAddBlur, Path=IsChecked}" Canvas.Left="171" Canvas.Top="5"/>
+                                                        <TextBox x:Name="txtMaxKAverageBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MaxKernelAverageBlur}" 
+                                                             Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cAddMedianBlur"  Width="120"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseMedianBlur}"
                                                               Content="Add median blur" Margin="5" LostFocus="SaveConfig"/>
-                                                    <CheckBox x:Name="cAddGaussianBlur"
+                                                        <TextBox x:Name="txtMinKMedianBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddMedianBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MinKernelMedianBlur}" 
+                                                             Margin="10,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                        <Label Content="~" IsEnabled="{Binding ElementName=cAddMedianBlur, Path=IsChecked}" Canvas.Left="171" Canvas.Top="5"/>
+                                                        <TextBox x:Name="txtMaxKMedianBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddMedianBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MaxKernelMedianBlur}" 
+                                                             Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cAddGaussianBlur"  Width="120"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianBlur}"
                                                               Content="Add gaussian blur" Margin="5" LostFocus="SaveConfig"/>
-                                                    <CheckBox x:Name="cAddPepperNoise"
+                                                        <TextBox x:Name="txtMinKGaussianBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddGaussianBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MinKernelGaussianBlur}" 
+                                                             Margin="10,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                        <Label Content="~" IsEnabled="{Binding ElementName=cAddGaussianBlur, Path=IsChecked}" Canvas.Left="171" Canvas.Top="5"/>
+                                                        <TextBox x:Name="txtMaxGaussianBlue" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddGaussianBlur, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MaxKernelGaussianBlur}" 
+                                                             Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cAddPepperNoise"  Width="120"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UsePepperNoise}"
                                                               Content="Add pepper noise" Margin="5" LostFocus="SaveConfig"/>
-                                                    <CheckBox x:Name="cAddGaussionNoise"
+                                                        <TextBox x:Name="txtMinPercentPepper" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddPepperNoise, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MinPercentPepperNoise}" 
+                                                             Margin="10,0,0,0" Height="20" Canvas.Left="99" Canvas.Top="10"></TextBox>
+                                                        <Label Content="~" IsEnabled="{Binding ElementName=cAddPepperNoise, Path=IsChecked}" Canvas.Left="171" Canvas.Top="5"/>
+                                                        <TextBox x:Name="txtMaxPercentPepper" LostFocus="SaveConfig"  Width="50" TextAlignment="Center"
+                                                             IsEnabled="{Binding ElementName=cAddPepperNoise, Path=IsChecked}"
+                                                                 Text="{Binding mConfiguration.EffectcSetting.MaxPercentPepperNoise}" 
+                                                             Height="20"  Canvas.Left="188" Canvas.Top="10"/>
+                                                        <Label Content=" %"></Label>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox x:Name="cAddGaussionNoise" Visibility="Hidden"  Width="120"
                                                               IsChecked="{Binding mConfiguration.EffectcSetting.UseGaussianNoise}"
                                                               Content="Add gaussian noise" Margin="5" LostFocus="SaveConfig"/>
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
-                                        </Canvas>
+                                        </StackPanel>
                                     </Expander>
                                 </StackPanel>
                             </ScrollViewer>

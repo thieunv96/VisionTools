@@ -173,19 +173,96 @@ namespace Heal.VisionTools.OCR.Struct
     }
     public class EffectSt
     {
+        public bool UseRandomStartPosition { get; set; }
         public bool UseAverageBlur { get; set; }
         public bool UseMedianBlur { get; set; }
         public bool UseGaussianBlur { get; set; }
         public bool UsePepperNoise { get; set; }
         public bool UseGaussianNoise { get; set; }
-        private int _MinKernelAverageBlur { get; set; }
-        private int _MaxKernelAverageBlur { get; set; }
-        private int _MinKernelMedianBlur { get; set; }
-        private int _MaxKernelMedianBlur { get; set; }
-        private int _MinKernelGaussianBlur { get; set; }
-        private int _MaxKernelGaussianBlur { get; set; }
-        private int _MinPercentPepperBlur { get; set; }
-        private int _MaxPercentPepperBlur { get; set; }
+        private uint _MinKernelAverageBlur { get; set; }
+        private uint _MaxKernelAverageBlur { get; set; }
+        private uint _MinKernelMedianBlur { get; set; }
+        private uint _MaxKernelMedianBlur { get; set; }
+        private uint _MinKernelGaussianBlur { get; set; }
+        private uint _MaxKernelGaussianBlur { get; set; }
+        private double _MinPercentPepperNoise { get; set; }
+        private double _MaxPercentPepperNoise { get; set; }
+        public uint MinKernelAverageBlur
+        {
+            get => _MinKernelAverageBlur;
+            set
+            {
+                _MinKernelAverageBlur = value < 1 ? 1 : value;
+                _MinKernelAverageBlur = _MinKernelAverageBlur % 2 == 0 ? _MinKernelAverageBlur + 1 : _MinKernelAverageBlur;
+                MaxKernelAverageBlur = MaxKernelAverageBlur;
+            }
+        }
+        public uint MaxKernelAverageBlur
+        {
+            get => _MaxKernelAverageBlur;
+            set
+            {
+                _MaxKernelAverageBlur = value < _MinKernelAverageBlur ? _MinKernelAverageBlur : value;
+                _MinKernelAverageBlur = _MinKernelAverageBlur % 2 == 0 ? _MinKernelAverageBlur + 1 : _MinKernelAverageBlur;
+            }
+        }
+        public uint MinKernelMedianBlur
+        {
+            get => _MinKernelMedianBlur;
+            set
+            {
+                _MinKernelMedianBlur = value < 1 ? 1 : value;
+                _MinKernelMedianBlur = _MinKernelMedianBlur % 2 == 0 ? _MinKernelMedianBlur + 1 : _MinKernelMedianBlur;
+                MaxKernelMedianBlur = MaxKernelMedianBlur;
+            }
+        }
+        public uint MaxKernelMedianBlur
+        {
+            get => _MaxKernelMedianBlur;
+            set
+            {
+                _MaxKernelMedianBlur = value < _MinKernelMedianBlur ? _MinKernelMedianBlur : value;
+                _MinKernelMedianBlur = _MinKernelMedianBlur % 2 == 0 ? _MinKernelMedianBlur + 1 : _MinKernelMedianBlur;
+            }
+        }
+        public uint MinKernelGaussianBlur
+        {
+            get => _MinKernelGaussianBlur;
+            set
+            {
+                _MinKernelGaussianBlur = value < 1 ? 1 : value;
+                _MinKernelGaussianBlur = _MinKernelGaussianBlur % 2 == 0 ? _MinKernelGaussianBlur + 1 : _MinKernelGaussianBlur;
+                MaxKernelGaussianBlur = MaxKernelGaussianBlur;
+            }
+        }
+        public uint MaxKernelGaussianBlur
+        {
+            get => _MaxKernelGaussianBlur;
+            set
+            {
+                _MaxKernelGaussianBlur = value < _MinKernelGaussianBlur ? _MinKernelGaussianBlur : value;
+                _MinKernelGaussianBlur = _MinKernelGaussianBlur % 2 == 0 ? _MinKernelGaussianBlur + 1 : _MinKernelGaussianBlur;
+            }
+        }
+        public double MinPercentPepperNoise
+        {
+            get => _MinPercentPepperNoise;
+            set
+            {
+                _MinPercentPepperNoise = value > 100 ? 100 : value;
+                _MinPercentPepperNoise = value < 0 ? 0 : value;
+                MaxPercentPepperNoise = MaxPercentPepperNoise;
+            }
+        }
+        public double MaxPercentPepperNoise
+        {
+            get => _MaxPercentPepperNoise;
+            set
+            {
+                _MaxPercentPepperNoise = value < _MinPercentPepperNoise ? _MinPercentPepperNoise : value;
+                _MaxPercentPepperNoise = _MaxPercentPepperNoise > 100 ? 100 : _MaxPercentPepperNoise;
+            }
+        }
         public EffectSt()
         {
             this.UseAverageBlur = true;
@@ -193,6 +270,15 @@ namespace Heal.VisionTools.OCR.Struct
             this.UseGaussianBlur = true;
             this.UseGaussianNoise = true;
             this.UsePepperNoise = true;
+            this.UseRandomStartPosition = true;
+            this.MinKernelAverageBlur = 3;
+            this.MinKernelGaussianBlur = 3;
+            this.MinKernelMedianBlur = 3;
+            this.MaxKernelAverageBlur = 5;
+            this.MaxKernelMedianBlur = 5;
+            this.MaxKernelGaussianBlur = 5;
+            this.MinPercentPepperNoise = 5;
+            this.MaxPercentPepperNoise = 15;
         }
     }
 }
