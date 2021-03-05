@@ -81,14 +81,18 @@ namespace Heal.VisionTools.OCR
             sw.Start();
             Utils.PageGeneration genPage = new Utils.PageGeneration();
             //genPage.test(mConfiguration);
-            var imagePage = genPage.GetPageImage(mConfiguration);
-            if (imagePage != null)
+            var pageResult = genPage.GetPageImage(mConfiguration);
+            if (pageResult != null)
             {
                 Log($"Try to preview the process successfully in {sw.ElapsedMilliseconds} ms...!\n");
-                var bms = Struct.Convertor.Bitmap2BitmapSource(imagePage.Bitmap);
+                for (int i = 0; i < pageResult.BoxChar.Length; i++)
+                {
+                    System.Drawing.Rectangle box = pageResult.BoxChar[i];
+                    CvInvoke.Rectangle(pageResult.ImageGenerated, box, new MCvScalar(0, 0, 255), 1);
+                }
+                var bms = Struct.Convertor.Bitmap2BitmapSource(pageResult.ImageGenerated.Bitmap);
                 imbPreview.Source = bms;
-                imagePage.Dispose();
-                imagePage = null;
+                pageResult.Dispose();
             }
             else
             {

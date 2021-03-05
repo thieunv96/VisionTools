@@ -16,9 +16,12 @@ namespace Heal.VisionTools.OCR.Utils
     class PageGeneration
     {
         private static System.Drawing.Text.PrivateFontCollection mFontCollection = new System.Drawing.Text.PrivateFontCollection();
-        public Image<Bgr, byte> GetPageImage(Struct.GenConfig Config)
+        public Struct.PageGeneratedResult GetPageImage(Struct.GenConfig Config)
         {
+            Struct.PageGeneratedResult pageResult = null;
             Image<Bgr, byte> imageOutput = InitImage(Config.ImageSetting);
+            List<Rectangle> listCharBox = new List<Rectangle>();
+            List<char> listChar = new List<char>();
             if(imageOutput != null)
             {
                 Random random = new Random();
@@ -51,17 +54,35 @@ namespace Heal.VisionTools.OCR.Utils
                             {
                                 string chr = content[row][col].ToString();
                                 DrawResult result = draw.DrawText(chr, font, Config.FontSetting.TextColor);
+                                
                                 Rectangle ROI = new Rectangle(x, y, result.Image.Width, result.Image.Height);
                                 if (ROI.X >= image.Width || ROI.Y >= image.Height)
                                     break;
                                 if (ROI.X < 0 || ROI.Y < 0)
                                     continue;
                                 image.ROI = ROI;
+                                // tinh toan ROI anh render 
+                                // tinh toan char Box
+                                bool isOutImage = false;
+                                Rectangle charBox = result.CharBox;
                                 if (image.Width < result.Image.Width || image.Height < result.Image.Height)
                                 {
                                     Rectangle ROIResult = new Rectangle(0, 0, image.Width, image.Height);
                                     result.Image.ROI = ROIResult;
                                     result.Mask.ROI = ROIResult;
+                                    charBox.Width = ROIResult.Width;
+                                    charBox.Height = ROIResult.Height;
+                                    if(charBox.X + charBox.Width > ROIResult.Width || charBox.Height + charBox.Y > ROIResult.Height)
+                                    {
+                                        isOutImage = true;
+                                    }
+                                }
+                                if(!isOutImage)
+                                {
+                                    charBox.X += x + xSt;
+                                    charBox.Y += y + ySt;
+                                    listCharBox.Add(charBox);
+                                    listChar.Add(chr[0]);
                                 }
                                 double opacity = random.Next(Convert.ToInt32(Config.TextSetting.MinOpacity * 100), Convert.ToInt32(Config.TextSetting.MaxOpacity * 100)) / 100.0;
                                 using (Image<Bgr, byte> imageAdd = new Image<Bgr, byte>(result.Image.Size))
@@ -75,11 +96,15 @@ namespace Heal.VisionTools.OCR.Utils
                                     CvInvoke.Add(imageOpacity, image, imageAdd);
                                     imageAdd.CopyTo(image);
                                 }
+
+
+
                                 image.ROI = Rectangle.Empty;
                                 x += result.Image.Width;
                                 if (x >= image.Width)
                                     break;
                                 x += Config.FontSetting.LetterSpacing;
+                                result.Dispose();
                             }
                             y += (int)(heightChar + (0.2 * heightChar));
                             y += Config.FontSetting.LineSpacing;
@@ -87,11 +112,14 @@ namespace Heal.VisionTools.OCR.Utils
                     }
                     image.CopyTo(imageOutput);
                 }
-
                 imageOutput.ROI = Rectangle.Empty;
+                AddEffect(imageOutput, Config.EffectcSetting);
+                pageResult = new Struct.PageGeneratedResult();
+                pageResult.BoxChar = listCharBox.ToArray();
+                pageResult.Char = listChar.ToArray();
+                pageResult.ImageGenerated = imageOutput;
             }
-            AddEffect(imageOutput, Config.EffectcSetting);
-            return imageOutput;
+            return pageResult;
         }
         public void AddEffect(Image<Bgr, byte> image, Struct.EffectSt effectSt)
         {
