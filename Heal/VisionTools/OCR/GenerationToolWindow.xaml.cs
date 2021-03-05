@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading;
 using System.ComponentModel;
 using System.IO;
 using System.Diagnostics;
@@ -27,8 +28,11 @@ namespace Heal.VisionTools.OCR
     public partial class GenerationToolWindow : Window, INotifyPropertyChanged
     {
         public Struct.GenConfig mGenConfig = new Struct.GenConfig();
+        private System.Timers.Timer mTimerGenerate = new System.Timers.Timer(50);
         public string mSavePath { get; set; }
         public bool mInSetColor = false;
+        public bool mIsCancel = false;
+        public bool mIsRunning = false;
         public Struct.GenConfig mConfiguration
         {
             get { 
@@ -210,11 +214,83 @@ namespace Heal.VisionTools.OCR
         }
         #endregion
 
+        private void OnTimedEvent(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            mTimerGenerate.Enabled = false;
+            this.Dispatcher.Invoke(() =>
+            {
+                if (cSaveConfig.IsChecked == true)
+                {
+                    string config = JsonConvert.SerializeObject(mConfiguration);
+                    File.WriteAllText($"{mSavePath}/config.json", config);
+                }
 
+                for (int pageNum = 0; pageNum < mConfiguration.ImageSetting.ImageNum; pageNum++)
+                {
+                    try
+                    {
+                        Utils.PageGeneration genPage = new Utils.PageGeneration();
+                        var pageResult = genPage.GetPageImage(mConfiguration);
+                        if (pageResult != null)
+                        {
+                            //Log($"Generate Page  : {pageNum} in {sw.ElapsedMilliseconds} ms...!\n");
+                            CvInvoke.Imwrite($"{mSavePath}/Page_{pageNum}.png", pageResult.ImageGenerated);
+                            string listBoxStr = string.Empty;
+                            for (int i = 0; i < pageResult.BoxChar.Length; i++)
+                            {
+                                System.Drawing.Rectangle box = pageResult.BoxChar[i];
+                                string boxStr = $"((({box.X},{box.Y})," +
+                                $"({box.X + box.Width},{box.Y})," +
+                                $"({box.X + box.Width}, {box.Y + box.Height})," +
+                                $"({box.X}, {box.Y + box.Height})),{pageResult.Char[i]})\n";
+                                listBoxStr += boxStr;
+                            }
+                            File.WriteAllText($"{mSavePath}/Page_{pageNum}.box", listBoxStr);
+                            pageResult.Dispose();
+                        }
+                        else
+                        {
+                            //Log($"Generate Page  : {pageNum} failed!\n");
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Log(ex.Message);
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    if (mIsCancel)
+                        break;
+                }
+                MessageBox.Show("Generate successfully!...", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+            });
+        }
         private void btGenerate_Click(object sender, RoutedEventArgs e)
         {
-            Random rd = new Random();
             
+            string savePath = txtSaveFolder.Text;
+            if (Directory.Exists(txtSaveFolder.Text))
+            {
+                string date = DateTime.Now.ToString("yyyy_MM_dd");
+                string savePathChild = $"{savePath}/{date}";
+                try
+                {
+                    Directory.CreateDirectory(savePathChild);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                mSavePath = savePathChild;
+                mTimerGenerate.Elapsed += OnTimedEvent;
+                mTimerGenerate.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Folder is not exists...!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btGenerateEachChar_Click(object sender, RoutedEventArgs e)
@@ -222,6 +298,10 @@ namespace Heal.VisionTools.OCR
 
         }
 
-        
+        private void btCancel_Click(object sender, RoutedEventArgs e)
+        {
+            if(mIsRunning)
+                mIsCancel = true;
+        }
     }
 }

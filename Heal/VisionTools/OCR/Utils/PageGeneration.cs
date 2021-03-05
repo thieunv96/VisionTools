@@ -70,8 +70,6 @@ namespace Heal.VisionTools.OCR.Utils
                                     Rectangle ROIResult = new Rectangle(0, 0, image.Width, image.Height);
                                     result.Image.ROI = ROIResult;
                                     result.Mask.ROI = ROIResult;
-                                    charBox.Width = ROIResult.Width;
-                                    charBox.Height = ROIResult.Height;
                                     if(charBox.X + charBox.Width > ROIResult.Width || charBox.Height + charBox.Y > ROIResult.Height)
                                     {
                                         isOutImage = true;
@@ -206,17 +204,21 @@ namespace Heal.VisionTools.OCR.Utils
                 }
                 listChar.Replace(" ", "");
                 Random random = new Random();
-                for (int i = 0; i < num; i++)
+                if(listChar.Length > 0)
                 {
-                    string str = string.Empty;
-                    int length = random.Next((int)textSt.MinLengthChar, (int)textSt.MaxLengthChar);
-                    for (int c = 0; c < length; c++)
+                    for (int i = 0; i < num; i++)
                     {
-                        int idChar = random.Next(0, listChar.Length);
-                        str += listChar[idChar];
+                        string str = string.Empty;
+                        int length = random.Next((int)textSt.MinLengthChar, (int)textSt.MaxLengthChar);
+                        for (int c = 0; c < length; c++)
+                        {
+                            int idChar = random.Next(0, listChar.Length);
+                            str += listChar[idChar];
+                        }
+                        content.Add(str);
                     }
-                    content.Add(str);
                 }
+                
             }
             else if (textSt.UseImportText)
             {
